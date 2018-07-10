@@ -28,7 +28,7 @@ bool GraphicsClass::Initialize(int screenWidth,int screenHeight,HWND hwnd)
 	{
 		MessageBox(hwnd, L"Could not initialze Direct3D.", L"Error", MB_OK);
 	}
-	return false;
+	return true;
 }
 
 

@@ -1,4 +1,8 @@
 #pragma once
+
+class InputClass;
+class GraphicsClass;
+
 class SystemClass
 {
 public:
@@ -6,7 +10,7 @@ public:
 	SystemClass(const SystemClass&);
 	~SystemClass();
 
-	bool Initialze();
+	bool Initialize();
 	void Shutdown();
 	void Run();
 
@@ -18,9 +22,13 @@ private:
 	void ShutdownWindows();
 
 private:
-	LPCSTR applicationName;
-		
+	LPCWSTR applicationName;
+	HINSTANCE hInstance;
+	HWND hwnd;
+
+	InputClass* Input = nullptr;
+	GraphicsClass* Graphics = nullptr;
 };
 
-static LRESULT CALLBACK WindProc(HWND, UINT, WPARAM, LPARAM);
+static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 static SystemClass* ApplicationHandle = 0;

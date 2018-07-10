@@ -4,6 +4,10 @@
 
 InputClass::InputClass()
 {
+	for (int i = 0; i < 256; i++)
+	{
+		keys[i] = false;
+	}
 }
 
 InputClass::InputClass(const InputClass &)
@@ -19,15 +23,17 @@ void InputClass::Initialize()
 {
 }
 
-void InputClass::KeyDown(UINT)
+void InputClass::KeyDown(UINT input)
 {
+	keys[input] = true;
 }
 
-void InputClass::KeyUp(UINT)
+void InputClass::KeyUp(UINT input)
 {
+	keys[input] = false;
 }
 
-bool InputClass::IsKeyDown(UINT)
+bool InputClass::IsKeyDown(UINT input)
 {
-	return false;
+	return keys[input];
 }
