@@ -22,3 +22,5 @@ private:
 		
 };
 
+static LRESULT CALLBACK WindProc(HWND, UINT, WPARAM, LPARAM);
+static SystemClass* ApplicationHandle = 0;
