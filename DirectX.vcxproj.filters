@@ -33,6 +33,12 @@
     <ClInclude Include="InputClass.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\Downloads\Dx11Demo_06\DDSTextureLoader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="LightShaderClass.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SystemClass.cpp">
@@ -53,5 +59,19 @@
     <ClCompile Include="InputClass.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\Downloads\Dx11Demo_06\DDSTextureLoader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="LightShaderClass.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Light.ps">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="Light.vs">
+      <Filter>리소스 파일</Filter>
+    </None>
   </ItemGroup>
 </Project>
