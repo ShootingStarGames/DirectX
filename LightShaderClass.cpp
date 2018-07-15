@@ -17,7 +17,7 @@ LightShaderClass::~LightShaderClass()
 
 bool LightShaderClass::Initialize(ID3D11Device *device, HWND hwnd)
 {
-	return InitializeShader(device, hwnd, const_cast<WCHAR*>(L"./light.vs"), const_cast<WCHAR*>(L"./light.ps"));
+	return InitializeShader(device, hwnd, L"./light.vs", L"./light.ps");
 }
 
 void LightShaderClass::Shutdown()
@@ -36,7 +36,7 @@ bool LightShaderClass::Render(ID3D11DeviceContext *deviceContext, int indexCount
 	return true;
 }
 
-bool LightShaderClass::InitializeShader(ID3D11Device *device, HWND hwnd, WCHAR *vsFilename, WCHAR *psFilename)
+bool LightShaderClass::InitializeShader(ID3D11Device *device, HWND hwnd, LPCWSTR vsFilename, LPCWSTR psFilename)
 {
 	HRESULT result;
 	ID3D10Blob* errorMessage = nullptr;
@@ -47,7 +47,7 @@ bool LightShaderClass::InitializeShader(ID3D11Device *device, HWND hwnd, WCHAR *
 	if (FAILED(result)) {
 		if (errorMessage)
 		{
-			OutputShaderErrorMessage(errorMessage, hwnd, MB_OK);
+			OutputShaderErrorMessage(errorMessage, hwnd, vsFilename);
 		}
 		else {
 			MessageBox(hwnd, vsFilename, L"Missing Shader File", MB_OK);
@@ -57,11 +57,11 @@ bool LightShaderClass::InitializeShader(ID3D11Device *device, HWND hwnd, WCHAR *
 
 	//픽셀 셰이더 컴파일
 	ID3D10Blob* pixelShaderBuffer = nullptr;
-	result = D3DCompileFromFile(psFilename, NULL, NULL, "ps_main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderBuffer, &errorMessage);
+ 	result = D3DCompileFromFile(psFilename, NULL, NULL, "ps_main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderBuffer, &errorMessage);
 	if (FAILED(result)) {
 		if (errorMessage)
 		{
-			OutputShaderErrorMessage(errorMessage, hwnd, MB_OK);
+			OutputShaderErrorMessage(errorMessage, hwnd, psFilename);
 		}
 		else {
 			MessageBox(hwnd, psFilename, L"Missing Shader File", MB_OK);
@@ -228,7 +228,7 @@ void LightShaderClass::ShutdownShader()
 	return;
 }
 
-void LightShaderClass::OutputShaderErrorMessage(ID3D10Blob *errorMessage, HWND hwnd, WCHAR *shaderFilename)
+void LightShaderClass::OutputShaderErrorMessage(ID3D10Blob *errorMessage, HWND hwnd, LPCWSTR shaderFilename)
 {
 	OutputDebugString(reinterpret_cast<const wchar_t*>(errorMessage->GetBufferPointer()));
 
@@ -262,12 +262,38 @@ bool LightShaderClass::SetShdaerParameter(ID3D11DeviceContext *deviceContext, XM
 	unsigned int bufferNumber = 0;
 	//정점 셰이더에 상수 버퍼를 바뀐 값으로 적용
 	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &matrixBuffer);
+	//픽셀 셰이더에 텍스쳐 리소스를 설정
+	deviceContext->PSSetShaderResources(0, 1, &texture);
 
+	if (FAILED(deviceContext->Map(lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
+	{
+		return false;
+	}
 
+	LightBufferType* dataPtr2 = (LightBufferType*)mappedResource.pData;
+	
+	dataPtr2->diffuseColor = diffuseColor;
+	dataPtr2->lightDirection = lightDirection;
+	dataPtr2->padding = 0.0f;
+
+	deviceContext->Unmap(lightBuffer, 0);
+
+	bufferNumber = 0;
+
+	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &lightBuffer);
 
 	return false;
 }
 
-void LightShaderClass::RenderShader(ID3D11DeviceContext *, int)
+void LightShaderClass::RenderShader(ID3D11DeviceContext *deviceContext, int indexCount)
 {
+	//입력 레이아웃 설정
+	deviceContext->IAGetInputLayout(&inputLayout);
+	//셰이더 설정
+	deviceContext->VSSetShader(vertexShader, NULL, 0);
+	deviceContext->PSSetShader(pixelShader, NULL, 0);
+
+	deviceContext->PSSetSamplers(0, 1, &sampleState);
+
+	deviceContext->DrawIndexed(indexCount, 0, 0);
 }

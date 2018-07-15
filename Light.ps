@@ -3,33 +3,33 @@ SamplerState SampleType;
 
 cbuffer LightBuffer
 {
-	float4 diffuseColor;
-	float3 lightDirection;
-	float padding;
-}
+   float4 diffuseColor;
+   float3 lightDirection;
+   float padding;
+};
 struct PS_INPUT
 {
-	float4 position :POSITON;
-	float2 tex : TEXCOORD0;
-	float3 normal :NORMAL;
-}
+   float4 position :POSITION;
+   float2 tex : TEXCOORD0;
+   float3 normal :NORMAL;
+};
 
 float4 ps_main(PS_INPUT input) : SV_TARGET
 {
-	float4 textureColor;
-	float3 lightDir;
-	float lightIntensity;
-	float4 color;
+   float4 textureColor;
+   float3 lightDir;
+   float lightIntensity;
+   float4 color;
 
-	textureColor = shaderTexture.Sample(SampleType,Input.tex);
+   textureColor = shaderTexture.Sample(SampleType,input.tex);
 
-	lightDir = -Input.lightDirection;
+   lightDir = -lightDirection;
 
-	lightIntensity = saturate(dot(input.normal,lightDir));
+   lightIntensity = saturate(dot(input.normal,lightDir));
 
-	color = saturate(diffuseColor * lightIntensity);
+   color = saturate(diffuseColor * lightIntensity);
 
-	color = color * textureColor;
+   color = color * textureColor;
 
-	return color;
+   return color;
 }

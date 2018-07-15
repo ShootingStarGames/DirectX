@@ -16,6 +16,7 @@ int APIENTRY WinMain(
 
 	if (System->Initialize())
 	{
+
 		System->Run();
 	}
 
