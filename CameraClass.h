@@ -1,6 +1,6 @@
 #pragma once
 
-class CameraClass 
+class CameraClass : public AlignedAllocationPolicy<16>
 {
 public:
 	CameraClass();
@@ -17,7 +17,7 @@ public:
 	void GetViewMatrix(XMMATRIX&);
 
 private:
-	XMFLOAT3 position;
-	XMFLOAT3 rotation;
-	XMMATRIX viewMatrix;
+	XMFLOAT3 m_position;
+	XMFLOAT3 m_rotation;
+	XMMATRIX m_viewMatrix;
 };

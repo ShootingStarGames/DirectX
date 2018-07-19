@@ -1,4 +1,5 @@
 #pragma once
+
 class LightClass
 {
 public:
@@ -13,7 +14,6 @@ public:
 	XMFLOAT3 GetDirection();
 
 private:
-	XMFLOAT4 diffuseColor;
-	XMFLOAT3 direction;
+	XMFLOAT4 m_diffuseColor;
+	XMFLOAT3 m_direction;
 };
-

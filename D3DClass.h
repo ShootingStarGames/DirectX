@@ -1,15 +1,16 @@
 #pragma once
-class D3DClass
+
+class D3DClass : public AlignedAllocationPolicy<16>
 {
 public:
 	D3DClass();
 	D3DClass(const D3DClass&);
 	~D3DClass();
 
-
 	bool Initialize(int, int, bool, HWND, bool, float, float);
 	void Shutdown();
-	void BegineScene(float, float, float, float);
+
+	void BeginScene(float, float, float, float);
 	void EndScene();
 
 	ID3D11Device* GetDevice();
@@ -22,20 +23,18 @@ public:
 	void GetVideoCardInfo(char*, int&);
 
 private:
-	bool vsync_enabled;
-	int videoCardMemory;
-	char videoCardDescription[128];
-	IDXGISwapChain* swapChain;
-	ID3D11Device* device;
-	ID3D11DeviceContext* deviceContext;
-	ID3D11RenderTargetView* renderTargetView;
-	ID3D11Texture2D* depthStencilBuffer;
-	ID3D11DepthStencilState* depthStencilState;
-	ID3D11DepthStencilView* depthStencilView;
-	ID3D11RasterizerState* rasterState;
-	XMMATRIX projectionMatrix;
-	XMMATRIX worldMatrix;
-	XMMATRIX orthoMatrix;
-
+	bool m_vsync_enabled = false;
+	int m_videoCardMemory = 0;
+	char m_videoCardDescription[128] = { 0, };
+	IDXGISwapChain* m_swapChain = nullptr;
+	ID3D11Device* m_device = nullptr;
+	ID3D11DeviceContext* m_deviceContext = nullptr;
+	ID3D11RenderTargetView* m_renderTargetView = nullptr;
+	ID3D11Texture2D* m_depthStencilBuffer = nullptr;
+	ID3D11DepthStencilState* m_depthStencilState = nullptr;
+	ID3D11DepthStencilView* m_depthStencilView = nullptr;
+	ID3D11RasterizerState* m_rasterState = nullptr;
+	XMMATRIX m_projectionMatrix;
+	XMMATRIX m_worldMatrix;
+	XMMATRIX m_orthoMatrix;
 };
-

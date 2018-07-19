@@ -1,17 +1,18 @@
 #include "stdafx.h"
-#include "D3DClass.h"
-#include "CameraClass.h"
-#include "ModelClass.h"
-#include "LightClass.h"
-#include "LightShaderClass.h"
-#include "GraphicsClass.h"
+#include "d3dclass.h"
+#include "cameraclass.h"
+#include "modelclass.h"
+#include "lightclass.h"
+#include "lightshaderclass.h"
+#include "graphicsclass.h"
 
 
 GraphicsClass::GraphicsClass()
 {
 }
 
-GraphicsClass::GraphicsClass(const GraphicsClass &)
+
+GraphicsClass::GraphicsClass(const GraphicsClass& other)
 {
 }
 
@@ -21,88 +22,113 @@ GraphicsClass::~GraphicsClass()
 }
 
 
-bool GraphicsClass::Initialize(int screenWidth,int screenHeight,HWND hwnd)
+bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
-	//DirectX Class
-	d3d = new D3DClass;
-	if (!d3d)
-	{
-		return false;
-	}
-	if (!d3d->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR))
-	{
-		MessageBox(hwnd, L"Could not initialze Direct3D.", L"Error", MB_OK);
-	}
-
-	//Camera Class
-	camera = new CameraClass;
-	if (!camera)
-	{
-		return false;
-	}
-	camera->SetPosition(0.0f, 0.0f, 0.0f);
-	//Model Class
-	model = new ModelClass;
-	if (!model->Initialize(d3d->GetDevice(), L"data/seafloor.dds"))
-	{
-		MessageBox(hwnd, L"Could not initialze Model.", L"Error", MB_OK);
-		return false;
-	}
-	
-	//LightShader Class
-	lightShader = new LightShaderClass;
-	if (!lightShader->Initialize(d3d->GetDevice(), hwnd))
-	{
-		MessageBox(hwnd, L"Could not initialze LightShader.", L"Error", MB_OK);
-		return false;
-	}
-
-	//Light Class
-	light = new LightClass;
-	if (!light)
+	// Direct3D 객체 생성
+	m_Direct3D = new D3DClass;
+	if(!m_Direct3D)
 	{
 		return false;
 	}
 
-	light->SetDiffuseColor(1.0f, 0.0f, 1.0f, 1.0f);
-	light->SetDirection(0.0f, 0.0f, 1.0f);
+	// Direct3D 객체 초기화
+	if(!m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR))
+	{
+		MessageBox(hwnd, L"Could not initialize Direct3D.", L"Error", MB_OK);
+		return false;
+	}
+
+	// m_Camera 객체 생성
+	m_Camera = new CameraClass;
+	if (!m_Camera)
+	{
+		return false;
+	}
+
+	// 카메라 포지션 설정
+	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
+
+	// m_Model 객체 생성
+	m_Model = new ModelClass;
+	if (!m_Model)
+	{
+		return false;
+	}
+
+	// m_Model 객체 초기화
+	if (!m_Model->Initialize(m_Direct3D->GetDevice(), L"./data/seafloor.dds"))
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// m_LightShader 객체 생성
+	m_LightShader = new LightShaderClass;
+	if (!m_LightShader)
+	{
+		return false;
+	}
+
+	// m_LightShader 객체 초기화
+	if (!m_LightShader->Initialize(m_Direct3D->GetDevice(), hwnd))
+	{
+		MessageBox(hwnd, L"Could not initialize the light shader object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// m_Light 객체 생성
+	m_Light = new LightClass;
+	if(!m_Light)
+	{
+		return false;
+	}
+
+	// m_Light 객체 초기화
+	m_Light->SetDiffuseColor(1.0f, 0.0f, 1.0f, 1.0f);
+	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
+
 	return true;
 }
 
 
 void GraphicsClass::Shutdown()
 {
-	if (light)
+	// m_Light 객체 반환
+	if(m_Light)
 	{
-		delete light;
-		light = 0;
+		delete m_Light;
+		m_Light = 0;
 	}
 
-	if (lightShader)
+	// m_LightShader 객체 반환
+	if (m_LightShader)
 	{
-		lightShader->Shutdown();
-		delete lightShader;
-		lightShader = 0;
-	}
-	
-	if (model)
-	{
-		model->Shutdown();
-		delete model;
-		model = 0;
+		m_LightShader->Shutdown();
+		delete m_LightShader;
+		m_LightShader = 0;
 	}
 
-	if (camera)
+	// m_Model 객체 반환
+	if (m_Model)
 	{
-		delete camera;
-		camera = 0;
+		m_Model->Shutdown();
+		delete m_Model;
+		m_Model = 0;
 	}
 
-	if (d3d)
+	// m_Camera 객체 반환
+	if (m_Camera)
 	{
-		d3d->Shutdown();
-		delete d3d;
-		d3d = 0;
+		delete m_Camera;
+		m_Camera = 0;
+	}
+
+	// Direct3D 객체 반환
+	if (m_Direct3D)
+	{
+		m_Direct3D->Shutdown();
+		delete m_Direct3D;
+		m_Direct3D = 0;
 	}
 }
 
@@ -110,37 +136,48 @@ void GraphicsClass::Shutdown()
 bool GraphicsClass::Frame()
 {
 	static float rotation = 0.0f;
-	rotation += (float)XM_PI*0.01f;
-	if (rotation > 360.0f)
+
+	// 각 프레임의 rotation 변수를 업데이트합니다.
+	rotation += (float)XM_PI * 0.01f;
+	if(rotation > 360.0f)
 	{
 		rotation -= 360.0f;
 	}
-
+	
+	// 그래픽 랜더링 처리
 	return Render(rotation);
 }
 
 
 bool GraphicsClass::Render(float rotation)
 {
-	//버퍼 삭제
-	d3d->BegineScene(0.0f, 0.0f, 0.0f, 1.0f);
+	// 씬을 그리기 위해 버퍼를 지웁니다
+	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
-	camera->Render();
+	// 카메라의 위치에 따라 뷰 행렬을 생성합니다
+	m_Camera->Render();
 
+	// 카메라 및 d3d 객체에서 월드, 뷰 및 투영 행렬을 가져옵니다
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
-	d3d->GetWorldMatrix(worldMatrix);
-	camera->GetViewMatrix(viewMatrix);
-	d3d->GetProjectionMatrix(projectionMatrix);
+	m_Direct3D->GetWorldMatrix(worldMatrix);
+	m_Camera->GetViewMatrix(viewMatrix);
+	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 
+	// 삼각형이 회전 할 수 있도록 회전 값으로 월드 행렬을 회전합니다.
 	worldMatrix = XMMatrixRotationY(rotation);
 
-	model->Render(d3d->GetDeviceContext());
+	// 모델 버텍스와 인덱스 버퍼를 그래픽 파이프 라인에 배치하여 드로잉을 준비합니다.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
 
-	if (!lightShader->Render(d3d->GetDeviceContext(), model->GetIndexCount(), worldMatrix,
-		viewMatrix, projectionMatrix, model->GetTexture(), light->GetDirection(), light->GetDiffuseColor())) {
+	// Light 쉐이더를 사용하여 모델을 렌더링합니다.
+	if (!m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+								   m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetDiffuseColor()))
+	{
 		return false;
 	}
-	//화면 출력 
-	d3d->EndScene();
-	return false;
+
+	// 버퍼의 내용을 화면에 출력합니다
+	m_Direct3D->EndScene();
+
+	return true;
 }

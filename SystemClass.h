@@ -1,7 +1,9 @@
 #pragma once
 
+
 class InputClass;
 class GraphicsClass;
+
 
 class SystemClass
 {
@@ -22,12 +24,12 @@ private:
 	void ShutdownWindows();
 
 private:
-	LPCWSTR applicationName;
-	HINSTANCE hInstance;
-	HWND hwnd;
+	LPCWSTR m_applicationName;
+	HINSTANCE m_hinstance;
+	HWND m_hwnd;
 
-	InputClass* Input = nullptr;
-	GraphicsClass* Graphics = nullptr;
+	InputClass* m_Input = nullptr;
+	GraphicsClass* m_Graphics = nullptr;
 };
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);

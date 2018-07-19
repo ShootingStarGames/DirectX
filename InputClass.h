@@ -1,4 +1,5 @@
 #pragma once
+
 class InputClass
 {
 public:
@@ -8,13 +9,11 @@ public:
 
 	void Initialize();
 
-	void KeyDown(UINT);
-	void KeyUp(UINT);
+	void KeyDown(unsigned int);
+	void KeyUp(unsigned int);
 
-	bool IsKeyDown(UINT);
+	bool IsKeyDown(unsigned int);
 
 private:
-	bool keys[256];
-
+	bool m_keys[256];
 };
-
