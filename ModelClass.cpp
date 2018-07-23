@@ -2,6 +2,9 @@
 #include "TextureClass.h"
 #include "modelclass.h"
 
+#include <fstream>
+
+using namespace std;
 
 ModelClass::ModelClass()
 {
@@ -18,8 +21,12 @@ ModelClass::~ModelClass()
 }
 
 
-bool ModelClass::Initialize(ID3D11Device* device, WCHAR* textureFilename)
+bool ModelClass::Initialize(ID3D11Device* device,char* modelFilename , WCHAR* textureFilename)
 {
+	if (!LoadModel(modelFilename))
+	{
+		return false;
+	}
 	// 정점 및 인덱스 버퍼를 초기화합니다.
 	if (!InitializeBuffers(device))
 	{
@@ -38,6 +45,8 @@ void ModelClass::Shutdown()
 
 	// 버텍스 및 인덱스 버퍼를 종료합니다.
 	ShutdownBuffers();
+
+	ReleaseModel();
 }
 
 
@@ -62,12 +71,6 @@ ID3D11ShaderResourceView* ModelClass::GetTexture()
 
 bool ModelClass::InitializeBuffers(ID3D11Device* device)
 {
-	// 정점 배열의 정점 수를 설정합니다.
-	m_vertexCount = 3;
-
-	// 인덱스 배열의 인덱스 수를 설정합니다.
-	m_indexCount = 3;
-
 	// 정점 배열을 만듭니다.
 	VertexType* vertices = new VertexType[m_vertexCount];
 	if (!vertices)
@@ -82,21 +85,14 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 		return false;
 	}
 
-	// 정점 배열에 값을 설정합니다.
-	vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom left.
-	vertices[0].texture = XMFLOAT2(0.0f, 1.0f);
+	for (int i = 0; i < m_vertexCount; i++)
+	{
+		vertices[i].position = XMFLOAT3(m_model[i].x, m_model[i].y, m_model[i].z);
+		vertices[i].texture = XMFLOAT2(m_model[i].tu, m_model[i].tv);
+		vertices[i].normal = XMFLOAT3(m_model[i].nx, m_model[i].ny, m_model[i].nz);
 
-	vertices[1].position = XMFLOAT3(0.0f, 1.0f, 0.0f);  // Top middle.
-	vertices[1].texture = XMFLOAT2(0.5f, 0.0f);
-
-	vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom right.
-	vertices[2].texture = XMFLOAT2(1.0f, 1.0f);
-
-	// 인덱스 배열에 값을 설정합니다.
-	indices[0] = 0;  // Bottom left.
-	indices[1] = 1;  // Top middle.
-	indices[2] = 2;  // Bottom right.
-
+		indices[i] = i;
+	}
 	// 정적 정점 버퍼의 구조체를 설정합니다.
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -207,5 +203,62 @@ void ModelClass::ReleaseTexture()
 		m_Texture->Shutdown();
 		delete m_Texture;
 		m_Texture = 0;
+	}
+}
+
+bool ModelClass::LoadModel(char *filename)
+{
+	ifstream fin;
+	fin.open(filename);
+
+	if (fin.fail())
+	{
+		return false;
+	}
+
+	char input = 0;
+	fin.get(input);
+
+	while (input != ':')
+	{
+		fin.get(input);
+	}
+
+	fin >> m_vertexCount;
+
+	m_indexCount = m_vertexCount;
+
+	m_model = new ModelType[m_vertexCount];
+	if (!m_model)
+	{
+		return false;
+	}
+	
+	fin.get(input);
+	while (input != ':')
+	{
+		fin.get(input);
+	}
+	fin.get(input);
+	fin.get(input);
+
+	for (int i = 0; i < m_vertexCount; i++)
+	{
+		fin >> m_model[i].x >> m_model[i].y >> m_model[i].z;
+		fin >> m_model[i].tu >> m_model[i].tv;
+		fin >> m_model[i].nx >> m_model[i].ny >> m_model[i].nz;
+	}
+
+	fin.close();
+
+	return true;
+}
+
+void ModelClass::ReleaseModel()
+{
+	if (m_model)
+	{
+		delete[] m_model;
+		m_model = 0;
 	}
 }
