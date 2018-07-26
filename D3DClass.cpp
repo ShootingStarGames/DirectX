@@ -318,6 +318,28 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	// 2D 렌더링을위한 직교 투영 행렬을 만듭니다
 	m_orthoMatrix = XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
 
+	D3D11_DEPTH_STENCIL_DESC depthDisableStencilStateDesc;
+	ZeroMemory(&depthDisableStencilStateDesc, sizeof(depthDisableStencilStateDesc));
+
+	depthDisableStencilStateDesc.DepthEnable = false;
+	depthDisableStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	depthDisableStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	depthDisableStencilStateDesc.StencilEnable = true;
+	depthDisableStencilStateDesc.StencilReadMask = 0xFF;
+	depthDisableStencilStateDesc.StencilWriteMask = 0xFF;
+	depthDisableStencilStateDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthDisableStencilStateDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+	depthDisableStencilStateDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthDisableStencilStateDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	depthDisableStencilStateDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthDisableStencilStateDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+	depthDisableStencilStateDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthDisableStencilStateDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	if (FAILED(m_device->CreateDepthStencilState(&depthDisableStencilStateDesc, &m_depthDisabledStencilState)))
+	{
+		return false;
+	}
 	return true;
 }
 
@@ -328,6 +350,12 @@ void D3DClass::Shutdown()
 	if (m_swapChain)
 	{
 		m_swapChain->SetFullscreenState(false, NULL);
+	}
+
+	if (m_depthDisabledStencilState)
+	{
+		m_depthDisabledStencilState->Release();
+		m_depthDisabledStencilState = 0;
 	}
 
 	if (m_rasterState)
@@ -443,4 +471,14 @@ void D3DClass::GetVideoCardInfo(char* cardName, int& memory)
 {
 	strcpy_s(cardName, 128, m_videoCardDescription);
 	memory = m_videoCardMemory;
+}
+
+void D3DClass::TurnZBufferOn()
+{
+	m_deviceContext->OMSetDepthStencilState(m_depthStencilState, 1);
+}
+
+void D3DClass::TurnZBufferOff()
+{
+	m_deviceContext->OMSetDepthStencilState(m_depthDisabledStencilState, 1);
 }

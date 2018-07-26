@@ -14,6 +14,8 @@ class CameraClass;
 class ModelClass;
 class LightClass;
 class LightShaderClass;
+class BitmapClass;
+class TextureShaderClass;
 
 class GraphicsClass
 {
@@ -35,4 +37,6 @@ private:
 	ModelClass* m_Model = nullptr;
 	LightShaderClass* m_LightShader = nullptr;
 	LightClass* m_Light = nullptr;
+	TextureShaderClass* m_TextureShader = nullptr;
+	BitmapClass* m_Bitmap = nullptr;
 };

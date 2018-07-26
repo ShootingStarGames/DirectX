@@ -37,6 +37,12 @@
     <ClCompile Include="TextureClass.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="BitmapClass.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureShaderClass.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AlignedAllocationPolicy.h">
@@ -81,6 +87,12 @@
     <ClInclude Include="ModelClass.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="BitmapClass.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureShaderClass.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="data\seafloor.dds" />
@@ -88,6 +100,8 @@
   <ItemGroup>
     <None Include="light.ps" />
     <None Include="light.vs" />
+    <None Include="texture.ps" />
+    <None Include="texture.vs" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header">
