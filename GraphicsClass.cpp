@@ -26,13 +26,13 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 	// Direct3D 객체 생성
 	m_Direct3D = new D3DClass;
-	if(!m_Direct3D)
+	if (!m_Direct3D)
 	{
 		return false;
 	}
 
 	// Direct3D 객체 초기화
-	if(!m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR))
+	if (!m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR))
 	{
 		MessageBox(hwnd, L"Could not initialize Direct3D.", L"Error", MB_OK);
 		return false;
@@ -78,14 +78,17 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// m_Light 객체 생성
 	m_Light = new LightClass;
-	if(!m_Light)
+	if (!m_Light)
 	{
 		return false;
 	}
 
 	// m_Light 객체 초기화
+	m_Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
+	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+	m_Light->SetSpecularPower(32.0f);
 
 	return true;
 }
@@ -94,7 +97,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 void GraphicsClass::Shutdown()
 {
 	// m_Light 객체 반환
-	if(m_Light)
+	if (m_Light)
 	{
 		delete m_Light;
 		m_Light = 0;
@@ -139,11 +142,11 @@ bool GraphicsClass::Frame()
 
 	// 각 프레임의 rotation 변수를 업데이트합니다.
 	rotation += (float)XM_PI * 0.01f;
-	if(rotation > 360.0f)
+	if (rotation > 360.0f)
 	{
 		rotation -= 360.0f;
 	}
-	
+
 	// 그래픽 랜더링 처리
 	return Render(rotation);
 }
@@ -171,7 +174,7 @@ bool GraphicsClass::Render(float rotation)
 
 	// Light 쉐이더를 사용하여 모델을 렌더링합니다.
 	if (!m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-								   m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetDiffuseColor()))
+		m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetDiffuseColor(), m_Light->GetAmbientColor(), m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower()))
 	{
 		return false;
 	}
