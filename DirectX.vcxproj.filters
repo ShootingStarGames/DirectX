@@ -94,7 +94,9 @@
     <ClInclude Include="TextureShaderClass.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="FontClass.h" />
+    <ClInclude Include="FontClass.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="data\seafloor.dds" />

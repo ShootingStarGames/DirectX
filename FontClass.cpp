@@ -60,7 +60,31 @@ void FontClass::BuildVertexArray(void *vertices, char *sentence, float drawX, fl
 		}
 		else
 		{
+			vertexPtr[index].position = XMFLOAT3(drawX, drawY, 0.0f);
+			vertexPtr[index].texture = XMFLOAT2(m_Font[letter].left, 0.0f);
+			index++;
+		
+			vertexPtr[index].position = XMFLOAT3(drawX + m_Font[letter].size, drawY - 16, 0.0f);
+			vertexPtr[index].texture = XMFLOAT2(m_Font[letter].right, 1.0f);
+			index++;
 
+			vertexPtr[index].position = XMFLOAT3(drawX, drawY - 16, 0.0f);
+			vertexPtr[index].texture = XMFLOAT2(m_Font[letter].left, 1.0f);
+			index++;
+
+			vertexPtr[index].position = XMFLOAT3(drawX, drawY, 0.0f);
+			vertexPtr[index].texture = XMFLOAT2(m_Font[letter].left, 0.0f);
+			index++;
+
+			vertexPtr[index].position = XMFLOAT3(drawX + m_Font[letter].size, drawY - 16, 0.0f);
+			vertexPtr[index].texture = XMFLOAT2(m_Font[letter].right, 0.0f);
+			index++;
+
+			vertexPtr[index].position = XMFLOAT3(drawX + m_Font[letter].size, drawY - 16, 0.0f);
+			vertexPtr[index].texture = XMFLOAT2(m_Font[letter].right, 1.0f);
+			index++;
+
+			drawX = drawX + m_Font[letter].size + 1.0f;
 		}
 	}
 }
