@@ -24,6 +24,9 @@ bool BitmapClass::Initialize(ID3D11Device * device, int screenWidth, int screenH
 	m_bitmapWidth = bitmapWidth;
 	m_bitmapHeight = bitmapHeight;
 
+	m_previousPosX = -1;
+	m_previousPosY = -1;
+
 	if (!InitializeBuffers(device))
 	{
 		return false;	
@@ -63,12 +66,13 @@ bool BitmapClass::InitializeBuffers(ID3D11Device *device)
 {
 	m_indexCount = m_vertexCount = 6;
 
-	VertexType*	vertices = new VertexType[m_indexCount];
+	VertexType*	vertices = new VertexType[m_vertexCount];
 	
 	if (!vertices)
 	{
 		return false;
 	}
+	memset(vertices, 0, (sizeof(VertexType) * m_vertexCount));
 
 	unsigned long* indices = new unsigned long[m_indexCount];
 	if (!indices)
@@ -157,11 +161,11 @@ bool BitmapClass::UpdateBuffers(ID3D11DeviceContext *deviceContext, int position
 	m_previousPosX = positionX;
 	m_previousPosY = positionY;
 
-	left = (float)((m_screenWidth / 2)*-1) + (float)positionX;
+	left = (float)((m_screenWidth / 2) * -1) + (float)positionX;
 	right = left + (float)m_bitmapWidth;
 
-	top = (float)((m_screenHeight / 2)*-1) + (float)positionY;
-	bottom = top + (float)m_bitmapHeight;
+	top = (float)(m_screenHeight / 2) - (float)positionY;
+	bottom = top - (float)m_bitmapHeight;
 
 	vertices = new VertexType[m_vertexCount];
 	if (!vertices)

@@ -43,6 +43,7 @@
     <ClCompile Include="TextureShaderClass.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="FontClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AlignedAllocationPolicy.h">
@@ -93,6 +94,7 @@
     <ClInclude Include="TextureShaderClass.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="FontClass.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="data\seafloor.dds" />
