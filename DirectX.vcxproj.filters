@@ -43,12 +43,18 @@
     <ClCompile Include="TextureShaderClass.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="FontClass.cpp" />
+    <ClCompile Include="FontClass.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="FontShaderClass.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="TextClass.cpp" />
+    <ClCompile Include="ShaderClass.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AlignedAllocationPolicy.h">
-      <Filter>Header</Filter>
-    </ClInclude>
     <ClInclude Include="CameraClass.h">
       <Filter>Header</Filter>
     </ClInclude>
@@ -97,15 +103,33 @@
     <ClInclude Include="FontClass.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="FontShaderClass.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="TextClass.h" />
+    <ClInclude Include="ShaderClass.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="data\seafloor.dds" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="light.ps" />
-    <None Include="light.vs" />
-    <None Include="texture.ps" />
-    <None Include="texture.vs" />
+    <None Include="light.vs">
+      <Filter>hlsl</Filter>
+    </None>
+    <None Include="light.ps">
+      <Filter>hlsl</Filter>
+    </None>
+    <None Include="texture.ps">
+      <Filter>hlsl</Filter>
+    </None>
+    <None Include="texture.vs">
+      <Filter>hlsl</Filter>
+    </None>
+    <None Include="font.vs">
+      <Filter>hlsl</Filter>
+    </None>
+    <None Include="font.ps">
+      <Filter>hlsl</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header">
@@ -114,5 +138,27 @@
     <Filter Include="Source">
       <UniqueIdentifier>{fbd4a63c-9874-4bcb-9184-95dd47468167}</UniqueIdentifier>
     </Filter>
+    <Filter Include="hlsl">
+      <UniqueIdentifier>{43ecd77a-8fbc-4b7c-85da-49233d86a6bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{cd91971b-866f-45de-992b-22a22874516c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="data\seafloor.dds">
+      <Filter>Resource</Filter>
+    </Image>
+    <Image Include="data\font.dds">
+      <Filter>Resource</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="data\cube.txt">
+      <Filter>Resource</Filter>
+    </Text>
+    <Text Include="data\fontdata.txt">
+      <Filter>Resource</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -6,6 +6,7 @@
 #include "lightshaderclass.h"
 #include "TextureShaderClass.h"
 #include "BitmapClass.h"
+#include "TextClass.h"
 #include "graphicsclass.h"
 
 
@@ -48,30 +49,46 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// 카메라 포지션 설정
-	m_Camera->SetPosition(0.0f, 0.0f, -6.0f);
-	m_TextureShader = new TextureShaderClass;
-	if (!m_TextureShader)
+	XMMATRIX baseViewMatrix;
+	m_Camera->SetPosition(0.0f, 0.0f, -1.0f);
+	m_Camera->Render();
+	m_Camera->GetViewMatrix(baseViewMatrix);
+
+	m_Text = new TextClass;
+	if (!m_Text)
 	{
 		return false;
 	}
 
-	if (!m_TextureShader->Initialize(m_Direct3D->GetDevice(), hwnd))
+	if (!m_Text->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), hwnd, screenWidth, screenHeight, baseViewMatrix))
 	{
-		MessageBox(hwnd, L"Could not initialize the Texture shader object", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize the Text object", L"Error", MB_OK);
 		return false;
 	}
 
-	m_Bitmap = new BitmapClass;
-	if (!m_Bitmap)
-	{
-		return false;
-	}
+	//m_TextureShader = new TextureShaderClass;
+	//if (!m_TextureShader)
+	//{
+	//	return false;
+	//}
 
-	if (!m_Bitmap->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight, L"./data/seafloor.dds", 256, 256))
-	{
-		MessageBox(hwnd, L"Could not initialize the Bitmap object", L"Error", MB_OK);
-		return false;
-	}
+	//if (!m_TextureShader->Initialize(m_Direct3D->GetDevice(), hwnd))
+	//{
+	//	MessageBox(hwnd, L"Could not initialize the Texture shader object", L"Error", MB_OK);
+	//	return false;
+	//}
+
+	//m_Bitmap = new BitmapClass;
+	//if (!m_Bitmap)
+	//{
+	//	return false;
+	//}
+
+	//if (!m_Bitmap->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight, L"./data/seafloor.dds", 256, 256))
+	//{
+	//	MessageBox(hwnd, L"Could not initialize the Bitmap object", L"Error", MB_OK);
+	//	return false;
+	//}
 	//// m_Model 객체 생성
 	//m_Model = new ModelClass;
 	//if (!m_Model)
@@ -121,6 +138,12 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void GraphicsClass::Shutdown()
 {
+	if (m_Text)
+	{
+		m_Text->Shutdown();
+		delete m_Text;
+		m_Text = 0;
+	}
 	if (m_Bitmap)
 	{
 		m_Bitmap->Shutdown();
@@ -178,6 +201,7 @@ bool GraphicsClass::Frame()
 		rotation -= 360.0f;
 	}
 
+	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 	// 그래픽 랜더링 처리
 	return Render(rotation);
 }
@@ -203,15 +227,23 @@ bool GraphicsClass::Render(float rotation)
 
 	m_Direct3D->TurnZBufferOff();
 
-	if (!m_Bitmap->Render(m_Direct3D->GetDeviceContext(), 100, 100))
+	m_Direct3D->TurnOnAlphaBlending();
+
+	if (!m_Text->Render(m_Direct3D->GetDeviceContext(), worldMatrix, orthoMatrix))
 	{
 		return false;
 	}
 
-	if (!m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Bitmap->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, m_Bitmap->GetTexture()))
+	m_Direct3D->TurnOffAlphaBlending();
+	/*if (!m_Bitmap->Render(m_Direct3D->GetDeviceContext(), 100, 100))
 	{
 		return false;
-	}
+	}*/
+
+	//if (!m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Bitmap->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, m_Bitmap->GetTexture()))
+	//{
+	//	return false;
+	//}
 
 	m_Direct3D->TurnZBufferOn();
 	//// 모델 버텍스와 인덱스 버퍼를 그래픽 파이프 라인에 배치하여 드로잉을 준비합니다.

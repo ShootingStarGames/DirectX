@@ -144,21 +144,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AlignedAllocationPolicy.h" />
     <ClInclude Include="BitmapClass.h" />
     <ClInclude Include="CameraClass.h" />
     <ClInclude Include="D3DClass.h" />
     <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="DxDefine.h" />
     <ClInclude Include="FontClass.h" />
+    <ClInclude Include="FontShaderClass.h" />
     <ClInclude Include="GraphicsClass.h" />
     <ClInclude Include="InputClass.h" />
     <ClInclude Include="LightClass.h" />
     <ClInclude Include="LightShaderClass.h" />
     <ClInclude Include="ModelClass.h" />
+    <ClInclude Include="ShaderClass.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SystemClass.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TextClass.h" />
     <ClInclude Include="TextureClass.h" />
     <ClInclude Include="TextureShaderClass.h" />
   </ItemGroup>
@@ -169,11 +171,13 @@
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="FontClass.cpp" />
+    <ClCompile Include="FontShaderClass.cpp" />
     <ClCompile Include="GraphicsClass.cpp" />
     <ClCompile Include="InputClass.cpp" />
     <ClCompile Include="LightClass.cpp" />
     <ClCompile Include="LightShaderClass.cpp" />
     <ClCompile Include="ModelClass.cpp" />
+    <ClCompile Include="ShaderClass.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -181,17 +185,25 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="SystemClass.cpp" />
+    <ClCompile Include="TextClass.cpp" />
     <ClCompile Include="TextureClass.cpp" />
     <ClCompile Include="TextureShaderClass.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="font.ps" />
+    <None Include="font.vs" />
     <None Include="light.ps" />
     <None Include="light.vs" />
     <None Include="texture.ps" />
     <None Include="texture.vs" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="data\font.dds" />
     <Image Include="data\seafloor.dds" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="data\cube.txt" />
+    <Text Include="data\fontdata.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
