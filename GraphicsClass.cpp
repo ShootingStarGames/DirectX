@@ -190,7 +190,7 @@ void GraphicsClass::Shutdown()
 }
 
 
-bool GraphicsClass::Frame()
+bool GraphicsClass::Frame(int mouseX,int mouseY)
 {
 	static float rotation = 0.0f;
 
@@ -199,6 +199,11 @@ bool GraphicsClass::Frame()
 	if (rotation > 360.0f)
 	{
 		rotation -= 360.0f;
+	}
+	
+	if (!m_Text->SetMousePosition(mouseX, mouseY, m_Direct3D->GetDeviceContext()))
+	{
+		return false;
 	}
 
 	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);

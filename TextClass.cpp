@@ -115,6 +115,33 @@ bool TextClass::Render(ID3D11DeviceContext *deviceContext, XMMATRIX worldMatrix,
 	return true;
 }
 
+bool TextClass::SetMousePosition(int mouseX, int mouseY, ID3D11DeviceContext *deviceContext)
+{
+	char tempString[16] = { 0, };
+	_itoa_s(mouseX, tempString, 10);
+
+	char mouseString[16] = { 0, };
+	strcpy_s(mouseString, "Mouse X :");
+	strcat_s(mouseString, tempString);
+
+	if (!UpdateSentence(m_sentence1, mouseString, 20, 20, 1.0f, 1.0f, 1.0f, deviceContext))
+	{
+		return false;
+	}
+
+	_itoa_s(mouseY, tempString, 10);
+
+	strcpy_s(mouseString, "Mouse Y :");
+	strcat_s(mouseString, tempString);
+
+	if (!UpdateSentence(m_sentence2, mouseString, 20, 40, 1.0f, 1.0f, 1.0f, deviceContext))
+	{
+		return false;
+	}
+
+	return true;
+}
+
 bool TextClass::InitializeSentence(SentenceType **sentence, int maxLength, ID3D11Device *device)
 {
 	VertexType* vertices;

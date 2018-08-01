@@ -1,34 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="CameraClass.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="D3DClass.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="DDSTextureLoader.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="GraphicsClass.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="InputClass.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="LightClass.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="LightShaderClass.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="ModelClass.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="SystemClass.cpp">
@@ -40,43 +19,48 @@
     <ClCompile Include="BitmapClass.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="TextureShaderClass.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="FontClass.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="FontShaderClass.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="TextClass.cpp" />
     <ClCompile Include="ShaderClass.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="TextClass.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureShaderClass.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="LightShaderClass.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="FontShaderClass.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraClass.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DClass.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSTextureLoader.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="InputClass.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CameraClass.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="D3DClass.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="DDSTextureLoader.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="DxDefine.h">
-      <Filter>Header</Filter>
-    </ClInclude>
     <ClInclude Include="GraphicsClass.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="InputClass.h">
-      <Filter>Header</Filter>
-    </ClInclude>
     <ClInclude Include="LightClass.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="LightShaderClass.h">
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="TextureClass.h">
@@ -88,27 +72,47 @@
     <ClInclude Include="SystemClass.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header</Filter>
-    </ClInclude>
     <ClInclude Include="ModelClass.h">
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="BitmapClass.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="TextureShaderClass.h">
-      <Filter>Header</Filter>
-    </ClInclude>
     <ClInclude Include="FontClass.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="FontShaderClass.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="TextClass.h" />
     <ClInclude Include="ShaderClass.h">
       <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="TextClass.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="FontShaderClass.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="LightShaderClass.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureShaderClass.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraClass.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DClass.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureLoader.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="DxDefine.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="InputClass.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +147,12 @@
     </Filter>
     <Filter Include="Resource">
       <UniqueIdentifier>{cd91971b-866f-45de-992b-22a22874516c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{7b0dde0b-5476-47c4-9c36-01536c4d1b0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{36e19650-61a5-4c1c-8df0-61fedc6da436}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

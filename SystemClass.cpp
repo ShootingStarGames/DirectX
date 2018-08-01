@@ -36,7 +36,11 @@ bool SystemClass::Initialize()
 	}
 
 	// m_Input 객체 초기화
-	m_Input->Initialize();
+	if (!m_Input->Initialize(m_hinstance, m_hwnd, screenWidth, screenHeight))
+	{
+		MessageBox(m_hwnd, L"Input Object", L"Error", MB_OK);
+		return false;
+	}
 
 	// m_Graphics 객체 생성.  그래픽 랜더링을 처리하기 위한 객체입니다.
 	m_Graphics = new GraphicsClass;
@@ -63,6 +67,7 @@ void SystemClass::Shutdown()
 	// m_Input 객체 반환
 	if (m_Input)
 	{
+		m_Input->Shutdown();
 		delete m_Input;
 		m_Input = 0;
 	}
@@ -97,49 +102,36 @@ void SystemClass::Run()
 			if (!Frame())
 				break;
 		}
+
+		if (m_Input->IsEscapePressed())
+		{
+			break;
+		}
 	}
 }
 
 
 bool SystemClass::Frame()
 {
-	// ESC 키 감지 및 종료 여부를 처리합니다
-	if (m_Input->IsKeyDown(VK_ESCAPE))
+	int mouseX = 0, mouseY = 0;
+	if (!m_Input->Frame())
 	{
 		return false;
 	}
+	m_Input->GetMouseLocation(mouseX, mouseY);
 
+	if (!m_Graphics->Frame(mouseX, mouseY))
+	{
+		return false;
+	}
 	// 그래픽 객체의 Frame을 처리합니다
-	return m_Graphics->Frame();
+	return m_Graphics->Render(0);
 }
 
 
 LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
-	switch (umsg)
-	{
-		// 키보드가 눌러졌는가 처리
-	case WM_KEYDOWN:
-	{
-		// 키 눌림 flag를 m_Input 객체에 처리하도록 합니다
-		m_Input->KeyDown((unsigned int)wparam);
-		return 0;
-	}
-
-	// 키보드가 떨어졌는가 처리
-	case WM_KEYUP:
-	{
-		// 키 해제 flag를 m_Input 객체에 처리하도록 합니다.
-		m_Input->KeyUp((unsigned int)wparam);
-		return 0;
-	}
-
-	// 그 외의 모든 메시지들은 기본 메시지 처리로 넘깁니다.
-	default:
-	{
-		return DefWindowProc(hwnd, umsg, wparam, lparam);
-	}
-	}
+	return DefWindowProc(hwnd, umsg, wparam, lparam);
 }
 
 
