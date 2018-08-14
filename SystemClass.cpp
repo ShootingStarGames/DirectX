@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "inputclass.h"
 #include "graphicsclass.h"
+#include "SoundClass.h"
 #include "systemclass.h"
 
 
@@ -49,6 +50,18 @@ bool SystemClass::Initialize()
 		return false;
 	}
 
+	m_Sound = new SoundClass;
+
+	if (!m_Sound)
+	{
+		return false;
+	}
+	if (!m_Sound->Initialize(m_hwnd))
+	{
+		MessageBox(m_hwnd, L"Could not initialize Direct Sound", L"Error", MB_OK);
+		return false;
+	}
+
 	// m_Graphics °´Ã¼ ÃÊ±âÈ­.
 	return m_Graphics->Initialize(screenWidth, screenHeight, m_hwnd);
 }
@@ -56,6 +69,12 @@ bool SystemClass::Initialize()
 
 void SystemClass::Shutdown()
 {
+	if (m_Sound)
+	{
+		m_Sound->Shutdown();
+		delete m_Sound;
+		m_Sound = 0;
+	}
 	// m_Graphics °´Ã¼ ¹ÝÈ¯
 	if (m_Graphics)
 	{

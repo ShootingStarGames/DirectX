@@ -157,6 +157,7 @@
     <ClInclude Include="LightShaderClass.h" />
     <ClInclude Include="ModelClass.h" />
     <ClInclude Include="ShaderClass.h" />
+    <ClInclude Include="SoundClass.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SystemClass.h" />
     <ClInclude Include="targetver.h" />
@@ -178,6 +179,7 @@
     <ClCompile Include="LightShaderClass.cpp" />
     <ClCompile Include="ModelClass.cpp" />
     <ClCompile Include="ShaderClass.cpp" />
+    <ClCompile Include="SoundClass.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -204,6 +206,9 @@
   <ItemGroup>
     <Text Include="data\cube.txt" />
     <Text Include="data\fontdata.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="data\sound01.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

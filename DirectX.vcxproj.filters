@@ -55,6 +55,9 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Base</Filter>
     </ClCompile>
+    <ClCompile Include="SoundClass.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicsClass.h">
@@ -114,6 +117,9 @@
     <ClInclude Include="stdafx.h">
       <Filter>Base</Filter>
     </ClInclude>
+    <ClInclude Include="SoundClass.h">
+      <Filter>Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="light.vs">
@@ -170,5 +176,10 @@
     <Text Include="data\fontdata.txt">
       <Filter>Resource</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="data\sound01.wav">
+      <Filter>Resource</Filter>
+    </Media>
   </ItemGroup>
 </Project>
