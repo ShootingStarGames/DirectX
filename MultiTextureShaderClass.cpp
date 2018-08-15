@@ -17,7 +17,7 @@ MultiTextureShaderClass::~MultiTextureShaderClass()
 
 bool MultiTextureShaderClass::Initialize(ID3D11Device *device, HWND hwnd)
 {
-	return InitializeShader(device, hwnd, L"./multitexture.vs", L"./multitexture.ps");
+	return InitializeShader(device, hwnd, L"./hlsl/LightMapVertexShader.hlsl", L"./hlsl/LightMapPixelShader.hlsl");
 }
 
 void MultiTextureShaderClass::Shutdown()
@@ -40,7 +40,7 @@ bool MultiTextureShaderClass::InitializeShader(ID3D11Device *device, HWND hwnd, 
 {
 	ID3D10Blob* errorMessage = nullptr;
 	ID3D10Blob* vertexShaderBuffer = nullptr;
-	HRESULT result = D3DCompileFromFile(vsFilename, NULL, NULL, "vs_main", "vs_5_0",
+	HRESULT result = D3DCompileFromFile(vsFilename, NULL, NULL, "main", "vs_5_0",
 		D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderBuffer, &errorMessage);
 	if (FAILED(result))
 	{
@@ -56,7 +56,7 @@ bool MultiTextureShaderClass::InitializeShader(ID3D11Device *device, HWND hwnd, 
 	}
 
 	ID3D10Blob* pixelShaderBuffer = nullptr;
-	result = D3DCompileFromFile(psFilename, NULL, NULL, "ps_main", "ps_5_0",
+	result = D3DCompileFromFile(psFilename, NULL, NULL, "main", "ps_5_0",
 		D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderBuffer, &errorMessage);
 	if (FAILED(result))
 	{

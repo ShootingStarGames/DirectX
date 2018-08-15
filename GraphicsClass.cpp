@@ -65,7 +65,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// m_Model °´Ã¼ ÃÊ±âÈ­
-	if (!m_Model->Initialize(m_Direct3D->GetDevice(), "./data/square.txt", 2, new WCHAR*[2]{ L"./data/dirt01.dds",L"./data/stone01.dds" }))
+	if (!m_Model->Initialize(m_Direct3D->GetDevice(), "./data/square.txt", 2, new WCHAR*[2]{ L"./data/stone01.dds",L"./data/light01.dds" }))
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;

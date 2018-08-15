@@ -166,32 +166,6 @@
     <ClInclude Include="TextureArrayClass.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="light.vs">
-      <Filter>hlsl</Filter>
-    </None>
-    <None Include="light.ps">
-      <Filter>hlsl</Filter>
-    </None>
-    <None Include="texture.ps">
-      <Filter>hlsl</Filter>
-    </None>
-    <None Include="texture.vs">
-      <Filter>hlsl</Filter>
-    </None>
-    <None Include="font.vs">
-      <Filter>hlsl</Filter>
-    </None>
-    <None Include="font.ps">
-      <Filter>hlsl</Filter>
-    </None>
-    <None Include="multitexture.ps">
-      <Filter>hlsl</Filter>
-    </None>
-    <None Include="multitexture.vs">
-      <Filter>hlsl</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Filter Include="hlsl">
       <UniqueIdentifier>{43ecd77a-8fbc-4b7c-85da-49233d86a6bc}</UniqueIdentifier>
     </Filter>
@@ -230,6 +204,15 @@
     <Image Include="data\font.dds">
       <Filter>Resource</Filter>
     </Image>
+    <Image Include="data\dirt01.dds">
+      <Filter>Resource</Filter>
+    </Image>
+    <Image Include="data\light01.dds">
+      <Filter>Resource</Filter>
+    </Image>
+    <Image Include="data\stone01.dds">
+      <Filter>Resource</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\cube.txt">
@@ -238,10 +221,47 @@
     <Text Include="data\fontdata.txt">
       <Filter>Resource</Filter>
     </Text>
+    <Text Include="data\square.txt">
+      <Filter>Resource</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Media Include="data\sound01.wav">
       <Filter>Resource</Filter>
     </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="hlsl\font.ps">
+      <Filter>hlsl</Filter>
+    </None>
+    <None Include="hlsl\font.vs">
+      <Filter>hlsl</Filter>
+    </None>
+    <None Include="hlsl\Light.ps">
+      <Filter>hlsl</Filter>
+    </None>
+    <None Include="hlsl\Light.vs">
+      <Filter>hlsl</Filter>
+    </None>
+    <None Include="hlsl\multitexture.ps">
+      <Filter>hlsl</Filter>
+    </None>
+    <None Include="hlsl\multitexture.vs">
+      <Filter>hlsl</Filter>
+    </None>
+    <None Include="hlsl\texture.ps">
+      <Filter>hlsl</Filter>
+    </None>
+    <None Include="hlsl\texture.vs">
+      <Filter>hlsl</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="hlsl\LightMapPixelShader.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="hlsl\LightMapVertexShader.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

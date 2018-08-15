@@ -208,25 +208,39 @@
     <ClCompile Include="TimerClass.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="font.ps" />
-    <None Include="font.vs" />
-    <None Include="light.ps" />
-    <None Include="light.vs" />
-    <None Include="multitexture.ps" />
-    <None Include="multitexture.vs" />
-    <None Include="texture.ps" />
-    <None Include="texture.vs" />
-  </ItemGroup>
-  <ItemGroup>
+    <Image Include="data\dirt01.dds" />
     <Image Include="data\font.dds" />
+    <Image Include="data\light01.dds" />
     <Image Include="data\seafloor.dds" />
+    <Image Include="data\stone01.dds" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\cube.txt" />
     <Text Include="data\fontdata.txt" />
+    <Text Include="data\square.txt" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="data\sound01.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="hlsl\font.ps" />
+    <None Include="hlsl\font.vs" />
+    <None Include="hlsl\Light.ps" />
+    <None Include="hlsl\Light.vs" />
+    <None Include="hlsl\multitexture.ps" />
+    <None Include="hlsl\multitexture.vs" />
+    <None Include="hlsl\texture.ps" />
+    <None Include="hlsl\texture.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="hlsl\LightMapPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="hlsl\LightMapVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
