@@ -1,125 +1,169 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="GraphicsClass.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="LightClass.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelClass.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="SystemClass.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureClass.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="BitmapClass.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="FontClass.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderClass.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="TextClass.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="TextureShaderClass.cpp">
-      <Filter>Shaders</Filter>
+      <Filter>Graphics\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="LightShaderClass.cpp">
-      <Filter>Shaders</Filter>
+      <Filter>Graphics\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="FontShaderClass.cpp">
-      <Filter>Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="CameraClass.cpp">
-      <Filter>Base</Filter>
-    </ClCompile>
-    <ClCompile Include="D3DClass.cpp">
-      <Filter>Base</Filter>
+      <Filter>Graphics\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="DDSTextureLoader.cpp">
-      <Filter>Base</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX.cpp">
-      <Filter>Base</Filter>
+      <Filter>Base\Source</Filter>
     </ClCompile>
     <ClCompile Include="InputClass.cpp">
-      <Filter>Base</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Base</Filter>
+      <Filter>Base\Source</Filter>
     </ClCompile>
     <ClCompile Include="SoundClass.cpp">
-      <Filter>Base</Filter>
+      <Filter>Base\Source</Filter>
     </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Base\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="CPUClass.cpp">
+      <Filter>Base\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="FPSClass.cpp">
+      <Filter>Base\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerClass.cpp">
+      <Filter>Base\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderClass.cpp">
+      <Filter>Graphics\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="PositionClass.cpp">
+      <Filter>Base\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemClass.cpp">
+      <Filter>Base\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiTextureShaderClass.cpp">
+      <Filter>Graphics\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="BitmapClass.cpp">
+      <Filter>Graphics\Others</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraClass.cpp">
+      <Filter>Graphics\Others</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DClass.cpp">
+      <Filter>Graphics\Others</Filter>
+    </ClCompile>
+    <ClCompile Include="FontClass.cpp">
+      <Filter>Graphics\Others</Filter>
+    </ClCompile>
+    <ClCompile Include="FrustumClass.cpp">
+      <Filter>Graphics\Others</Filter>
+    </ClCompile>
+    <ClCompile Include="LightClass.cpp">
+      <Filter>Graphics\Others</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelClass.cpp">
+      <Filter>Graphics\Others</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelListClass.cpp">
+      <Filter>Graphics\Others</Filter>
+    </ClCompile>
+    <ClCompile Include="TextClass.cpp">
+      <Filter>Graphics\Others</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureClass.cpp">
+      <Filter>Graphics\Others</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsClass.cpp">
+      <Filter>Graphics\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureArrayClass.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GraphicsClass.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="LightClass.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureClass.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="SystemClass.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelClass.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="BitmapClass.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="FontClass.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderClass.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="TextClass.h">
-      <Filter>Header</Filter>
-    </ClInclude>
     <ClInclude Include="FontShaderClass.h">
-      <Filter>Shaders</Filter>
+      <Filter>Graphics\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="LightShaderClass.h">
-      <Filter>Shaders</Filter>
+      <Filter>Graphics\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="TextureShaderClass.h">
-      <Filter>Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="CameraClass.h">
-      <Filter>Base</Filter>
-    </ClInclude>
-    <ClInclude Include="D3DClass.h">
-      <Filter>Base</Filter>
+      <Filter>Graphics\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="DDSTextureLoader.h">
-      <Filter>Base</Filter>
+      <Filter>Base\Header</Filter>
     </ClInclude>
     <ClInclude Include="DxDefine.h">
-      <Filter>Base</Filter>
+      <Filter>Base\Header</Filter>
     </ClInclude>
     <ClInclude Include="InputClass.h">
-      <Filter>Base</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Base</Filter>
+      <Filter>Base\Header</Filter>
     </ClInclude>
     <ClInclude Include="SoundClass.h">
-      <Filter>Base</Filter>
+      <Filter>Base\Header</Filter>
     </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Base\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="CPUClass.h">
+      <Filter>Base\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="FPSClass.h">
+      <Filter>Base\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerClass.h">
+      <Filter>Base\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Base\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionClass.h">
+      <Filter>Base\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemClass.h">
+      <Filter>Base\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderClass.h">
+      <Filter>Graphics\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiTextureShaderClass.h">
+      <Filter>Graphics\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="BitmapClass.h">
+      <Filter>Graphics\Others</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraClass.h">
+      <Filter>Graphics\Others</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DClass.h">
+      <Filter>Graphics\Others</Filter>
+    </ClInclude>
+    <ClInclude Include="FontClass.h">
+      <Filter>Graphics\Others</Filter>
+    </ClInclude>
+    <ClInclude Include="FrustumClass.h">
+      <Filter>Graphics\Others</Filter>
+    </ClInclude>
+    <ClInclude Include="LightClass.h">
+      <Filter>Graphics\Others</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelClass.h">
+      <Filter>Graphics\Others</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelListClass.h">
+      <Filter>Graphics\Others</Filter>
+    </ClInclude>
+    <ClInclude Include="TextClass.h">
+      <Filter>Graphics\Others</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureClass.h">
+      <Filter>Graphics\Others</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsClass.h">
+      <Filter>Graphics\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureArrayClass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="light.vs">
@@ -140,25 +184,43 @@
     <None Include="font.ps">
       <Filter>hlsl</Filter>
     </None>
+    <None Include="multitexture.ps">
+      <Filter>hlsl</Filter>
+    </None>
+    <None Include="multitexture.vs">
+      <Filter>hlsl</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Header">
-      <UniqueIdentifier>{f9aa053f-3974-4b8f-96b7-feb11b5310a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source">
-      <UniqueIdentifier>{fbd4a63c-9874-4bcb-9184-95dd47468167}</UniqueIdentifier>
-    </Filter>
     <Filter Include="hlsl">
       <UniqueIdentifier>{43ecd77a-8fbc-4b7c-85da-49233d86a6bc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource">
       <UniqueIdentifier>{cd91971b-866f-45de-992b-22a22874516c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders">
-      <UniqueIdentifier>{7b0dde0b-5476-47c4-9c36-01536c4d1b0f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Base">
       <UniqueIdentifier>{36e19650-61a5-4c1c-8df0-61fedc6da436}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Header">
+      <UniqueIdentifier>{7f9a7381-2274-4e99-866a-05c2a10d4c1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Source">
+      <UniqueIdentifier>{2665df28-8b68-4b4f-bd5a-6853d065ab62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{4f6a94bb-5a8d-4a48-9c4c-95ac1d2f5da3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Shaders">
+      <UniqueIdentifier>{7b0dde0b-5476-47c4-9c36-01536c4d1b0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{afdd31ea-3847-43bb-9400-4826177c0afa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Others">
+      <UniqueIdentifier>{f72e38eb-76fc-4ea1-8d99-dee6ce6032ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Main">
+      <UniqueIdentifier>{83f0c24f-d239-4a35-afd5-d2eec512276a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

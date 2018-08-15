@@ -17,6 +17,9 @@ class LightShaderClass;
 class BitmapClass;
 class TextureShaderClass;
 class TextClass;
+class ModelListClass;
+class FrustumClass;
+class MultiTextureShaderClass;
 
 class GraphicsClass
 {
@@ -27,8 +30,8 @@ public:
 
 	bool Initialize(int, int, HWND);
 	void Shutdown();
-	bool Frame(int, int);
-	bool Render(float);
+	bool Frame(float);
+	bool Render();
 
 private:
 	D3DClass* m_Direct3D = nullptr;
@@ -39,4 +42,7 @@ private:
 	TextureShaderClass* m_TextureShader = nullptr;
 	BitmapClass* m_Bitmap = nullptr;
 	TextClass* m_Text = nullptr;
+	ModelListClass* m_ModelList = nullptr;
+	FrustumClass* m_Frustum = nullptr;
+	MultiTextureShaderClass* m_MultiTextureShader = nullptr;
 };

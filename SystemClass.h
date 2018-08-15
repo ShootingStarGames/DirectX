@@ -4,6 +4,10 @@
 class InputClass;
 class GraphicsClass;
 class SoundClass;
+class FPSClass;
+class TimerClass;
+class CPUClass;
+class PositionClass;
 
 class SystemClass
 {
@@ -31,6 +35,11 @@ private:
 	InputClass* m_Input = nullptr;
 	GraphicsClass* m_Graphics = nullptr;
 	SoundClass* m_Sound = nullptr;
+	
+	FPSClass* m_Fps = nullptr;
+	CPUClass* m_Cpu = nullptr;
+	TimerClass* m_Timer = nullptr;
+	PositionClass* m_Position = nullptr;
 };
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);

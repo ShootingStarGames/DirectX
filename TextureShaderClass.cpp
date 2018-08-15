@@ -186,40 +186,7 @@ bool TextureShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR
 
 void TextureShaderClass::ShutdownShader()
 {
-	// 샘플러 상태를 해제한다.
-	if (m_sampleState)
-	{
-		m_sampleState->Release();
-		m_sampleState = 0;
-	}
-
-	// 행렬 상수 버퍼를 해제합니다.
-	if (m_matrixBuffer)
-	{
-		m_matrixBuffer->Release();
-		m_matrixBuffer = 0;
-	}
-
-	// 레이아웃을 해제합니다.
-	if (m_layout)
-	{
-		m_layout->Release();
-		m_layout = 0;
-	}
-
-	// 픽셀 쉐이더를 해제합니다.
-	if (m_pixelShader)
-	{
-		m_pixelShader->Release();
-		m_pixelShader = 0;
-	}
-
-	// 버텍스 쉐이더를 해제합니다.
-	if (m_vertexShader)
-	{
-		m_vertexShader->Release();
-		m_vertexShader = 0;
-	}
+	ShaderClass::ShutdownShader();
 }
 
 bool TextureShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
@@ -258,21 +225,4 @@ bool TextureShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 	deviceContext->PSSetShaderResources(0, 1, &texture);
 
 	return true;
-}
-
-
-void TextureShaderClass::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
-{
-	// 정점 입력 레이아웃을 설정합니다.
-	deviceContext->IASetInputLayout(m_layout);
-
-	// 삼각형을 그릴 정점 셰이더와 픽셀 셰이더를 설정합니다.
-	deviceContext->VSSetShader(m_vertexShader, NULL, 0);
-	deviceContext->PSSetShader(m_pixelShader, NULL, 0);
-
-	// 픽셀 쉐이더에서 샘플러 상태를 설정합니다.
-	deviceContext->PSSetSamplers(0, 1, &m_sampleState);
-
-	// 삼각형을 그립니다.
-	deviceContext->DrawIndexed(indexCount, 0, 0);
 }

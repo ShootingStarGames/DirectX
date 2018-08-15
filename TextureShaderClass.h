@@ -17,6 +17,4 @@ private:
 	void ShutdownShader();
 
 	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*);
-	void RenderShader(ID3D11DeviceContext*, int);
-
 };

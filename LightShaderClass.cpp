@@ -32,10 +32,10 @@ void LightShaderClass::Shutdown()
 
 
 bool LightShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
-	XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor, XMFLOAT4 abientColor, XMFLOAT3 cameraPosition, XMFLOAT4 specularColor, float specularPower)
+	XMMATRIX projectionMatrix, ID3D11ShaderResourceView** textureArray, XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor, XMFLOAT4 abientColor, XMFLOAT3 cameraPosition, XMFLOAT4 specularColor, float specularPower)
 {
 	// 렌더링에 사용할 셰이더 매개 변수를 설정합니다.
-	if (!SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, diffuseColor, abientColor, cameraPosition, specularColor, specularPower))
+	if (!SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, textureArray, lightDirection, diffuseColor, abientColor, cameraPosition, specularColor, specularPower))
 	{
 		return false;
 	}
@@ -227,52 +227,19 @@ bool LightShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
 
 void LightShaderClass::ShutdownShader()
 {
+	ShaderClass::ShutdownShader();
 	// 광원 상수 버퍼를 해제합니다.
 	if(m_lightBuffer)
 	{
 		m_lightBuffer->Release();
 		m_lightBuffer = 0;
 	}
-
-	// 행렬 상수 버퍼를 해제합니다.
-	if (m_matrixBuffer)
-	{
-		m_matrixBuffer->Release();
-		m_matrixBuffer = 0;
-	}
-
-	// 샘플러 상태를 해제한다.
-	if (m_sampleState)
-	{
-		m_sampleState->Release();
-		m_sampleState = 0;
-	}
-
-	// 레이아웃을 해제합니다.
-	if (m_layout)
-	{
-		m_layout->Release();
-		m_layout = 0;
-	}
-
-	// 픽셀 쉐이더를 해제합니다.
-	if (m_pixelShader)
-	{
-		m_pixelShader->Release();
-		m_pixelShader = 0;
-	}
-
-	// 버텍스 쉐이더를 해제합니다.
-	if (m_vertexShader)
-	{
-		m_vertexShader->Release();
-		m_vertexShader = 0;
-	}
+	
 }
 
 
 bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
-	XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor, XMFLOAT4 ambientColor, XMFLOAT3 cameraPosition, XMFLOAT4 specularColor, float specularPower)
+	XMMATRIX projectionMatrix, ID3D11ShaderResourceView** textureArray, XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor, XMFLOAT4 ambientColor, XMFLOAT3 cameraPosition, XMFLOAT4 specularColor, float specularPower)
 {
 	// 행렬을 transpose하여 셰이더에서 사용할 수 있게 합니다
 	worldMatrix = XMMatrixTranspose(worldMatrix);
@@ -304,7 +271,7 @@ bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
 	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
 
 	// 픽셀 셰이더에서 셰이더 텍스처 리소스를 설정합니다.
-	deviceContext->PSSetShaderResources(0, 1, &texture);
+	deviceContext->PSSetShaderResources(0, 1, &textureArray[0]);
 
 	// light constant buffer를 잠글 수 있도록 기록한다.
 	if(FAILED(deviceContext->Map(m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
@@ -348,21 +315,4 @@ bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
 	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_cameraBuffer);
 
 	return true;
-}
-
-
-void LightShaderClass::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
-{
-	// 정점 입력 레이아웃을 설정합니다.
-	deviceContext->IASetInputLayout(m_layout);
-
-	// 삼각형을 그릴 정점 셰이더와 픽셀 셰이더를 설정합니다.
-	deviceContext->VSSetShader(m_vertexShader, NULL, 0);
-	deviceContext->PSSetShader(m_pixelShader, NULL, 0);
-
-	// 픽셀 쉐이더에서 샘플러 상태를 설정합니다.
-	deviceContext->PSSetSamplers(0, 1, &m_sampleState);
-
-	// 삼각형을 그립니다.
-	deviceContext->DrawIndexed(indexCount, 0, 0);
 }

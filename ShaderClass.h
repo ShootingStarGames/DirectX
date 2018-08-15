@@ -11,6 +11,8 @@ protected:
 
 protected:
 	void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
+	void ShutdownShader();
+	void RenderShader(ID3D11DeviceContext*, int);
 
 protected:
 	ID3D11VertexShader * m_vertexShader = nullptr;

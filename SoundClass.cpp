@@ -206,7 +206,7 @@ bool SoundClass::LoadWaveFile(char *filename, IDirectSoundBuffer8 ** secondaryBu
 	unsigned char* bufferPtr = nullptr;
 	unsigned long bufferSize = 0;
 	if (FAILED((*secondaryBuffer)->Lock(0, waveFileHeader.dataSize, (void**)&bufferPtr, (DWORD*)&bufferSize, NULL, 0, 0)))
-	{
+	{	
 		return false;
 	}
 

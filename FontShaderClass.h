@@ -21,7 +21,6 @@ private:
 	void ShutdownShader();
 
 	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, XMFLOAT4);
-	void RenderShader(ID3D11DeviceContext*, int);
 
 private:
 	ID3D11Buffer * m_pixelBuffer = nullptr;

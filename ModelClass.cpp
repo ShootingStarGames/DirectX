@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "TextureClass.h"
 #include "modelclass.h"
-
+#include "TextureArrayClass.h"
 #include <fstream>
 
 using namespace std;
@@ -21,7 +21,7 @@ ModelClass::~ModelClass()
 }
 
 
-bool ModelClass::Initialize(ID3D11Device* device,char* modelFilename , WCHAR* textureFilename)
+bool ModelClass::Initialize(ID3D11Device* device,char* modelFilename, int fileNum, WCHAR** textureFilenames)
 {
 	if (!LoadModel(modelFilename))
 	{
@@ -34,14 +34,14 @@ bool ModelClass::Initialize(ID3D11Device* device,char* modelFilename , WCHAR* te
 	}
 
 	// 이 모델의 텍스처를 로드합니다.
-	return LoadTexture(device, textureFilename);
+	return LoadTexture(device, fileNum, textureFilenames);
 }
 
 
 void ModelClass::Shutdown()
 {
 	// 모델 텍스쳐를 반환합니다.
-	ReleaseTexture();
+	ReleaseTextures();
 
 	// 버텍스 및 인덱스 버퍼를 종료합니다.
 	ShutdownBuffers();
@@ -63,9 +63,9 @@ int ModelClass::GetIndexCount()
 }
 
 
-ID3D11ShaderResourceView* ModelClass::GetTexture()
+ID3D11ShaderResourceView** ModelClass::GetTextureArray()
 {
-	return m_Texture->GetTexture();
+	return m_TextureArray->GetTextureArray();
 }
 
 
@@ -181,28 +181,28 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 }
 
 
-bool ModelClass::LoadTexture(ID3D11Device* device, WCHAR* filename)
+bool ModelClass::LoadTexture(ID3D11Device* device, int fileNum, WCHAR** filenames)
 {
 	// 텍스처 오브젝트를 생성한다.
-	m_Texture = new TextureClass;
-	if (!m_Texture)
+	m_TextureArray = new TextureArrayClass;
+	if (!m_TextureArray)
 	{
 		return false;
 	}
 
 	// 텍스처 오브젝트를 초기화한다.
-	return m_Texture->Initialize(device, filename);
+	return m_TextureArray->Initialize(device, fileNum, filenames);
 }
 
 
-void ModelClass::ReleaseTexture()
+void ModelClass::ReleaseTextures()
 {
 	// 텍스처 오브젝트를 릴리즈한다.
-	if (m_Texture)
+	if (m_TextureArray)
 	{
-		m_Texture->Shutdown();
-		delete m_Texture;
-		m_Texture = 0;
+		m_TextureArray->Shutdown();
+		delete m_TextureArray;
+		m_TextureArray = 0;
 	}
 }
 

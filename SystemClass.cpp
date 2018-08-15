@@ -2,6 +2,10 @@
 #include "inputclass.h"
 #include "graphicsclass.h"
 #include "SoundClass.h"
+#include "FPSClass.h"
+#include "CPUClass.h"
+#include "TimerClass.h"
+#include "PositionClass.h"
 #include "systemclass.h"
 
 
@@ -62,6 +66,35 @@ bool SystemClass::Initialize()
 		return false;
 	}
 
+	m_Fps = new FPSClass;
+	if (!m_Fps)
+	{
+		return false;
+	}
+
+	m_Cpu = new CPUClass;
+	if (!m_Cpu)
+	{
+		return false;
+	}
+
+	m_Timer = new TimerClass;
+	if (!m_Timer)
+	{
+		return false;
+	}
+
+	if (!m_Timer->Initialize())
+	{
+		MessageBox(m_hwnd, L"Could not initialize Timer object", L"Error", MB_OK);
+		return false;
+	}
+
+	m_Position = new PositionClass;
+	if (!m_Position)
+	{
+		return false;
+	}
 	// m_Graphics 객체 초기화.
 	return m_Graphics->Initialize(screenWidth, screenHeight, m_hwnd);
 }
@@ -69,6 +102,27 @@ bool SystemClass::Initialize()
 
 void SystemClass::Shutdown()
 {
+	if (m_Position)
+	{
+		delete m_Position;
+		m_Position = 0;
+	}
+	if (m_Fps)
+	{
+		delete m_Fps;
+		m_Fps = 0;
+	}
+	if (m_Cpu)
+	{
+		m_Cpu->Shutdown();
+		delete m_Cpu;
+		m_Cpu = 0;
+	}
+	if (m_Timer)
+	{
+		delete m_Timer;
+		m_Timer = 0;
+	}
 	if (m_Sound)
 	{
 		m_Sound->Shutdown();
@@ -132,19 +186,31 @@ void SystemClass::Run()
 
 bool SystemClass::Frame()
 {
+	m_Fps->Frame();
+	m_Cpu->Frame();
+	m_Timer->Frame();
+
 	int mouseX = 0, mouseY = 0;
 	if (!m_Input->Frame())
 	{
 		return false;
 	}
-	m_Input->GetMouseLocation(mouseX, mouseY);
 
-	if (!m_Graphics->Frame(mouseX, mouseY))
+	m_Position->SetFrameTime(m_Timer->GetTime());
+
+	m_Position->TurnLeft(m_Input->IsLeftArrowPressed());
+
+	m_Position->TurnRight(m_Input->IsRightArrowPressed());
+
+	m_Input->GetMouseLocation(mouseX, mouseY);
+	float rotationY;
+	m_Position->GetRotation(rotationY);
+	if (!m_Graphics->Frame(rotationY))
 	{
 		return false;
 	}
 	// 그래픽 객체의 Frame을 처리합니다
-	return m_Graphics->Render(0);
+	return m_Graphics->Render();
 }
 
 

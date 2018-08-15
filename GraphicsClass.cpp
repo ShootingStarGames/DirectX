@@ -7,6 +7,9 @@
 #include "TextureShaderClass.h"
 #include "BitmapClass.h"
 #include "TextClass.h"
+#include "ModelListClass.h"
+#include "FrustumClass.h"
+#include "MultiTextureShaderClass.h"
 #include "graphicsclass.h"
 
 
@@ -54,42 +57,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera->Render();
 	m_Camera->GetViewMatrix(baseViewMatrix);
 
-	
-
-	m_TextureShader = new TextureShaderClass;m_Text = new TextClass;
-	if (!m_Text)
-	{
-		return false;
-	}
-
-	if (!m_Text->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), hwnd, screenWidth, screenHeight, baseViewMatrix))
-	{
-		MessageBox(hwnd, L"Could not initialize the Text object", L"Error", MB_OK);
-		return false;
-	}
-
-	if (!m_TextureShader)
-	{
-		return false;
-	}
-
-	if (!m_TextureShader->Initialize(m_Direct3D->GetDevice(), hwnd))
-	{
-		MessageBox(hwnd, L"Could not initialize the Texture shader object", L"Error", MB_OK);
-		return false;
-	}
-
-	m_Bitmap = new BitmapClass;
-	if (!m_Bitmap)
-	{
-		return false;
-	}
-
-	if (!m_Bitmap->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight, L"./data/seafloor.dds", 256, 256))
-	{
-		MessageBox(hwnd, L"Could not initialize the Bitmap object", L"Error", MB_OK);
-		return false;
-	}
 	// m_Model 객체 생성
 	m_Model = new ModelClass;
 	if (!m_Model)
@@ -98,23 +65,20 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// m_Model 객체 초기화
-	if (!m_Model->Initialize(m_Direct3D->GetDevice(), "./data/cube.txt", L"./data/seafloor.dds"))
+	if (!m_Model->Initialize(m_Direct3D->GetDevice(), "./data/square.txt", 2, new WCHAR*[2]{ L"./data/dirt01.dds",L"./data/stone01.dds" }))
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
-
-	// m_LightShader 객체 생성
-	m_LightShader = new LightShaderClass;
-	if (!m_LightShader)
+	
+	m_MultiTextureShader = new MultiTextureShaderClass;
+	if (!m_MultiTextureShader)
 	{
 		return false;
 	}
-
-	// m_LightShader 객체 초기화
-	if (!m_LightShader->Initialize(m_Direct3D->GetDevice(), hwnd))
+	if (!m_MultiTextureShader->Initialize(m_Direct3D->GetDevice(), hwnd))
 	{
-		MessageBox(hwnd, L"Could not initialize the light shader object.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize the multiTexutre shader object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -132,6 +96,23 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetSpecularPower(32.0f);
 
+	m_ModelList = new ModelListClass;
+	if (!m_ModelList)
+	{
+		return false;
+	}
+
+	if (!m_ModelList->Initializie(25))
+	{
+		MessageBox(hwnd, L"Could not initialize the model list object", L"Error", MB_OK);
+		return false;
+	}
+
+	m_Frustum = new FrustumClass;
+	if (!m_Frustum)
+	{
+		return false;
+	}
 
 	return true;
 }
@@ -139,6 +120,25 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void GraphicsClass::Shutdown()
 {
+	if (m_MultiTextureShader)
+	{
+		m_MultiTextureShader->Shutdown();
+		delete m_MultiTextureShader;
+		m_MultiTextureShader = 0;
+	}
+	if (m_Frustum)
+	{
+		delete m_Frustum;
+		m_Frustum = 0;
+	}
+
+	if (m_ModelList)
+	{
+		m_ModelList->Shutdown();
+		delete m_ModelList;
+		m_ModelList = 0;
+	}
+
 	if (m_Text)
 	{
 		m_Text->Shutdown();
@@ -191,29 +191,17 @@ void GraphicsClass::Shutdown()
 }
 
 
-bool GraphicsClass::Frame(int mouseX,int mouseY)
+bool GraphicsClass::Frame(float rotation)
 {
-	static float rotation = 0.0f;
-
-	// 각 프레임의 rotation 변수를 업데이트합니다.
-	rotation += (float)XM_PI * 0.005f;
-	if (rotation > 360.0f)
-	{
-		rotation -= 360.0f;
-	}
-	
-	if (!m_Text->SetMousePosition(mouseX, mouseY, m_Direct3D->GetDeviceContext()))
-	{
-		return false;
-	}
-
 	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
-	// 그래픽 랜더링 처리
-	return Render(rotation);
+
+	m_Camera->SetRotation(0.0f, rotation, 0.0f);
+
+	return Render();
 }
 
 
-bool GraphicsClass::Render(float rotation)
+bool GraphicsClass::Render()
 {
 	// 씬을 그리기 위해 버퍼를 지웁니다
 	m_Direct3D->BeginScene(0.0f, 0.0f, 1.0f, 1.0f);
@@ -228,30 +216,55 @@ bool GraphicsClass::Render(float rotation)
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 	m_Direct3D->GetOrthoMatrix(orthoMatrix);
 
-	// 삼각형이 회전 할 수 있도록 회전 값으로 월드 행렬을 회전합니다.
-	//worldMatrix = XMMatrixRotationY(rotation);
+	m_Frustum->ConstructFrustum(SCREEN_DEPTH, projectionMatrix, viewMatrix);
 
-	m_Direct3D->TurnZBufferOff();
+	int modelCount = m_ModelList->GetModelCount();
 
-	m_Direct3D->TurnOnAlphaBlending();
+	int rendercount = 0;
+	float positionX, positionY, positionZ;
+	float radius = 1.0f;
+	XMFLOAT4 color;
 
-	if (!m_Text->Render(m_Direct3D->GetDeviceContext(), worldMatrix, orthoMatrix))
+	for (int index = 0; index < modelCount; index++)
 	{
-		return false;
+		m_ModelList->GetData(index, positionX, positionY, positionZ, color);
+		m_Light->SetDiffuseColor(color.x, color.y, color.z, color.w);
+		if (m_Frustum->CheckCube(positionX, positionY, positionZ, radius))
+		{
+			worldMatrix = XMMatrixTranslation(positionX, positionY, positionZ);
+
+			m_Model->Render(m_Direct3D->GetDeviceContext());
+
+			m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(),
+				worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTextureArray());
+			m_Direct3D->GetWorldMatrix(worldMatrix);
+
+			rendercount++;
+		}
 	}
 
-	m_Direct3D->TurnOffAlphaBlending();
-	if (!m_Bitmap->Render(m_Direct3D->GetDeviceContext(), 100, 100))
-	{
-		return false;
-	}
+	
+	//m_Direct3D->TurnZBufferOff();
 
-	if (!m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Bitmap->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, m_Bitmap->GetTexture()))
-	{
-		return false;
-	}
+	//m_Direct3D->TurnOnAlphaBlending();
 
-	m_Direct3D->TurnZBufferOn();
+	//if (!m_Text->Render(m_Direct3D->GetDeviceContext(), worldMatrix, orthoMatrix))
+	//{
+	//	return false;
+	//}
+
+	//m_Direct3D->TurnOffAlphaBlending();
+	//if (!m_Bitmap->Render(m_Direct3D->GetDeviceContext(), 100, 100))
+	//{
+	//	return false;
+	//}
+
+	//if (!m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Bitmap->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, m_Bitmap->GetTexture()))
+	//{
+	//	return false;
+	//}
+
+	//m_Direct3D->TurnZBufferOn();
 	//// 모델 버텍스와 인덱스 버퍼를 그래픽 파이프 라인에 배치하여 드로잉을 준비합니다.
 	//m_Model->Render(m_Direct3D->GetDeviceContext());
 

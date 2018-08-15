@@ -181,44 +181,12 @@ bool FontShaderClass::InitializeShader(ID3D11Device *device, HWND hwnd, WCHAR *v
 
 void FontShaderClass::ShutdownShader()
 {
+	ShaderClass::ShutdownShader();
+
 	if (m_pixelBuffer)
 	{
 		m_pixelBuffer->Release();
 		m_pixelBuffer = 0;
-	}
-	// 샘플러 상태를 해제한다.
-	if (m_sampleState)
-	{
-		m_sampleState->Release();
-		m_sampleState = 0;
-	}
-
-	// 행렬 상수 버퍼를 해제합니다.
-	if (m_matrixBuffer)
-	{
-		m_matrixBuffer->Release();
-		m_matrixBuffer = 0;
-	}
-
-	// 레이아웃을 해제합니다.
-	if (m_layout)
-	{
-		m_layout->Release();
-		m_layout = 0;
-	}
-
-	// 픽셀 쉐이더를 해제합니다.
-	if (m_pixelShader)
-	{
-		m_pixelShader->Release();
-		m_pixelShader = 0;
-	}
-
-	// 버텍스 쉐이더를 해제합니다.
-	if (m_vertexShader)
-	{
-		m_vertexShader->Release();
-		m_vertexShader = 0;
 	}
 }
 
@@ -272,15 +240,4 @@ bool FontShaderClass::SetShaderParameters(ID3D11DeviceContext *deviceContext, XM
 
 	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &m_pixelBuffer);
 	return true;
-}
-
-void FontShaderClass::RenderShader(ID3D11DeviceContext *deviceContext, int indexCount)
-{
-	deviceContext->IASetInputLayout(m_layout);
-
-	deviceContext->VSSetShader(m_vertexShader, NULL, 0);
-	deviceContext->PSSetShader(m_pixelShader, NULL, 0);
-
-	deviceContext->PSSetSamplers(0, 1, &m_sampleState);
-	deviceContext->DrawIndexed(indexCount, 0, 0);
 }
