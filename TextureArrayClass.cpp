@@ -43,6 +43,11 @@ void TextureArrayClass::Shutdown()
 	delete[] m_textures;
 }
 
+int TextureArrayClass::GetTextureNum()
+{
+	return m_fileNum;
+}
+
 ID3D11ShaderResourceView ** TextureArrayClass::GetTextureArray()
 {
 	return m_textures;

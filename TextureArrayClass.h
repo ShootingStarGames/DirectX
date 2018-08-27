@@ -9,6 +9,7 @@ public:
 	bool Initialize(ID3D11Device*, int, WCHAR**);
 	void Shutdown();
 
+	int GetTextureNum();
 	ID3D11ShaderResourceView** GetTextureArray();
 
 private:

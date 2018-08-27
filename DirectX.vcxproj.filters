@@ -263,5 +263,11 @@
     <FxCompile Include="hlsl\LightMapVertexShader.hlsl">
       <Filter>hlsl</Filter>
     </FxCompile>
+    <FxCompile Include="hlsl\AlphamapPixelShader.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="hlsl\AlphamapVertexShader.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

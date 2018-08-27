@@ -64,8 +64,9 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	WCHAR* textureArray[3]{ L"./data/stone01.dds",L"./data/dirt01.dds",L"./data/alpha01.dds" };
 	// m_Model °´Ã¼ ÃÊ±âÈ­
-	if (!m_Model->Initialize(m_Direct3D->GetDevice(), "./data/square.txt", 2, new WCHAR*[2]{ L"./data/stone01.dds",L"./data/light01.dds" }))
+	if (!m_Model->Initialize(m_Direct3D->GetDevice(), "./data/square.txt", 3, textureArray))
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
@@ -236,7 +237,7 @@ bool GraphicsClass::Render()
 			m_Model->Render(m_Direct3D->GetDeviceContext());
 
 			m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(),
-				worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTextureArray());
+				worldMatrix, viewMatrix, projectionMatrix,m_Model->GetTextureNum() ,m_Model->GetTextureArray());
 			m_Direct3D->GetWorldMatrix(worldMatrix);
 
 			rendercount++;

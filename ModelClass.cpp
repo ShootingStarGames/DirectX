@@ -57,6 +57,11 @@ void ModelClass::Render(ID3D11DeviceContext* deviceContext)
 }
 
 
+int ModelClass::GetTextureNum()
+{
+	return m_TextureArray->GetTextureNum();
+}
+
 int ModelClass::GetIndexCount()
 {
 	return m_indexCount;

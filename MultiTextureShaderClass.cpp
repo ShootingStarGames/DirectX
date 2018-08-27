@@ -17,7 +17,7 @@ MultiTextureShaderClass::~MultiTextureShaderClass()
 
 bool MultiTextureShaderClass::Initialize(ID3D11Device *device, HWND hwnd)
 {
-	return InitializeShader(device, hwnd, L"./hlsl/LightMapVertexShader.hlsl", L"./hlsl/LightMapPixelShader.hlsl");
+	return InitializeShader(device, hwnd, L"./hlsl/AlphamapVertexShader.hlsl", L"./hlsl/AlphamapPixelShader.hlsl");
 }
 
 void MultiTextureShaderClass::Shutdown()
@@ -26,9 +26,9 @@ void MultiTextureShaderClass::Shutdown()
 }
 
 bool MultiTextureShaderClass::Render(ID3D11DeviceContext *deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix
-	, ID3D11ShaderResourceView **textureArray)
+	, int textureNum, ID3D11ShaderResourceView **textureArray)
 {
-	if (!SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, textureArray))
+	if (!SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, textureNum,textureArray))
 	{
 		return false;
 	}
@@ -169,7 +169,7 @@ void MultiTextureShaderClass::ShutdownShader()
 }
 
 bool MultiTextureShaderClass::SetShaderParameters(ID3D11DeviceContext *deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix
-	, ID3D11ShaderResourceView **textureArray)
+	,int textureNum, ID3D11ShaderResourceView **textureArray)
 {
 	worldMatrix = XMMatrixTranspose(worldMatrix);
 	viewMatrix = XMMatrixTranspose(viewMatrix);
@@ -200,7 +200,7 @@ bool MultiTextureShaderClass::SetShaderParameters(ID3D11DeviceContext *deviceCon
 	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
 
 	// 픽셀 셰이더에서 셰이더 텍스처 리소스를 설정합니다.
-	deviceContext->PSSetShaderResources(0, 2, textureArray);
+	deviceContext->PSSetShaderResources(0, textureNum, textureArray);
 
 	return true;
 }

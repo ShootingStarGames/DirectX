@@ -28,6 +28,7 @@ public:
 	void Shutdown();
 	void Render(ID3D11DeviceContext*);
 
+	int GetTextureNum();
 	int GetIndexCount();
 	ID3D11ShaderResourceView** GetTextureArray();
 
