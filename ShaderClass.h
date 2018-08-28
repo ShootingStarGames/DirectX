@@ -14,6 +14,7 @@ protected:
 	void ShutdownShader();
 	void RenderShader(ID3D11DeviceContext*, int);
 
+	virtual HRESULT InitializeLayout(ID3D11Device*, ID3D10Blob*) = 0;
 protected:
 	ID3D11VertexShader * m_vertexShader = nullptr;
 	ID3D11PixelShader* m_pixelShader = nullptr;

@@ -88,6 +88,90 @@ bool FontShaderClass::InitializeShader(ID3D11Device *device, HWND hwnd, WCHAR *v
 		return false;
 	}
 
+	if (FAILED(InitializeLayout(device,vertexShaderBuffer)))
+	{
+		return false;
+	}
+
+	// 더 이상 사용되지 않는 정점 셰이더 퍼버와 픽셀 셰이더 버퍼를 해제합니다.
+	vertexShaderBuffer->Release();
+	vertexShaderBuffer = 0;
+
+	pixelShaderBuffer->Release();
+	pixelShaderBuffer = 0;
+
+	{
+		// 정점 셰이더에 있는 행렬 상수 버퍼의 구조체를 작성합니다.
+		D3D11_BUFFER_DESC matrixBufferDesc;
+		matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+		matrixBufferDesc.ByteWidth = sizeof(MatrixBufferType);
+		matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		matrixBufferDesc.MiscFlags = 0;
+		matrixBufferDesc.StructureByteStride = 0;
+
+		// 상수 버퍼 포인터를 만들어 이 클래스에서 정점 셰이더 상수 버퍼에 접근할 수 있게 합니다.
+		result = device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
+		if (FAILED(result))
+		{
+			return false;
+		}
+	}
+	{
+		// 텍스처 샘플러 상태 구조체를 생성 및 설정합니다.
+		D3D11_SAMPLER_DESC samplerDesc;
+		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.MipLODBias = 0.0f;
+		samplerDesc.MaxAnisotropy = 1;
+		samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+		samplerDesc.BorderColor[0] = 0;
+		samplerDesc.BorderColor[1] = 0;
+		samplerDesc.BorderColor[2] = 0;
+		samplerDesc.BorderColor[3] = 0;
+		samplerDesc.MinLOD = 0;
+		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+		// 텍스처 샘플러 상태를 만듭니다.
+		result = device->CreateSamplerState(&samplerDesc, &m_sampleState);
+		if (FAILED(result))
+		{
+			return false;
+		}
+	}
+	{
+		D3D11_BUFFER_DESC pixelBufferDesc;
+		pixelBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+		pixelBufferDesc.ByteWidth = sizeof(PixelBufferType);
+		pixelBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		pixelBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		pixelBufferDesc.MiscFlags = 0;
+		pixelBufferDesc.StructureByteStride = 0;
+		result = device->CreateBuffer(&pixelBufferDesc, NULL, &m_pixelBuffer);
+		if (FAILED(result))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+void FontShaderClass::ShutdownShader()
+{
+	ShaderClass::ShutdownShader();
+
+	if (m_pixelBuffer)
+	{
+		m_pixelBuffer->Release();
+		m_pixelBuffer = 0;
+	}
+}
+
+HRESULT FontShaderClass::InitializeLayout(ID3D11Device *device, ID3D10Blob *vertexShaderBuffer)
+{
 	D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
 	polygonLayout[0].SemanticName = "POSITION";
 	polygonLayout[0].SemanticIndex = 0;
@@ -108,86 +192,8 @@ bool FontShaderClass::InitializeShader(ID3D11Device *device, HWND hwnd, WCHAR *v
 	// 레이아웃의 요소 수를 가져옵니다.
 	UINT numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
-	// 정점 입력 레이아웃을 만듭니다.
-	result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(),
+	return device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(),
 		vertexShaderBuffer->GetBufferSize(), &m_layout);
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-	// 더 이상 사용되지 않는 정점 셰이더 퍼버와 픽셀 셰이더 버퍼를 해제합니다.
-	vertexShaderBuffer->Release();
-	vertexShaderBuffer = 0;
-
-	pixelShaderBuffer->Release();
-	pixelShaderBuffer = 0;
-
-
-	// 정점 셰이더에 있는 행렬 상수 버퍼의 구조체를 작성합니다.
-	D3D11_BUFFER_DESC matrixBufferDesc;
-	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	matrixBufferDesc.ByteWidth = sizeof(MatrixBufferType);
-	matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	matrixBufferDesc.MiscFlags = 0;
-	matrixBufferDesc.StructureByteStride = 0;
-
-	// 상수 버퍼 포인터를 만들어 이 클래스에서 정점 셰이더 상수 버퍼에 접근할 수 있게 합니다.
-	result = device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
-	if (FAILED(result))
-	{
-		return false;
-	}
-	// 텍스처 샘플러 상태 구조체를 생성 및 설정합니다.
-	D3D11_SAMPLER_DESC samplerDesc;
-	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.MipLODBias = 0.0f;
-	samplerDesc.MaxAnisotropy = 1;
-	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-	samplerDesc.BorderColor[0] = 0;
-	samplerDesc.BorderColor[1] = 0;
-	samplerDesc.BorderColor[2] = 0;
-	samplerDesc.BorderColor[3] = 0;
-	samplerDesc.MinLOD = 0;
-	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-
-	// 텍스처 샘플러 상태를 만듭니다.
-	result = device->CreateSamplerState(&samplerDesc, &m_sampleState);
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-	D3D11_BUFFER_DESC pixelBufferDesc;
-	pixelBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	pixelBufferDesc.ByteWidth = sizeof(PixelBufferType);
-	pixelBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	pixelBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	pixelBufferDesc.MiscFlags = 0;
-	pixelBufferDesc.StructureByteStride = 0;
-
-	result = device->CreateBuffer(&pixelBufferDesc, NULL, &m_pixelBuffer);
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-	return true;
-}
-
-void FontShaderClass::ShutdownShader()
-{
-	ShaderClass::ShutdownShader();
-
-	if (m_pixelBuffer)
-	{
-		m_pixelBuffer->Release();
-		m_pixelBuffer = 0;
-	}
 }
 
 bool FontShaderClass::SetShaderParameters(ID3D11DeviceContext *deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
