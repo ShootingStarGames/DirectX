@@ -82,7 +82,13 @@
     <ClCompile Include="TextureArrayClass.cpp">
       <Filter>Graphics\Others</Filter>
     </ClCompile>
-    <ClCompile Include="BumpMapShaderClass.cpp" />
+    <ClCompile Include="BumpMapShaderClass.cpp">
+      <Filter>Graphics\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="SpecMapShaderClass.cpp">
+      <Filter>Graphics\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTextureClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FontShaderClass.h">
@@ -169,7 +175,13 @@
     <ClInclude Include="TextureArrayClass.h">
       <Filter>Graphics\Others</Filter>
     </ClInclude>
-    <ClInclude Include="BumpMapShaderClass.h" />
+    <ClInclude Include="BumpMapShaderClass.h">
+      <Filter>Graphics\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="SpecMapShaderClass.h">
+      <Filter>Graphics\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTextureClass.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="hlsl">
@@ -279,6 +291,12 @@
       <Filter>hlsl</Filter>
     </FxCompile>
     <FxCompile Include="hlsl\BumpVertexShader.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="hlsl\SpecmapPixelShader.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="hlsl\SpecmapVertexShader.hlsl">
       <Filter>hlsl</Filter>
     </FxCompile>
   </ItemGroup>

@@ -21,6 +21,8 @@ class ModelListClass;
 class FrustumClass;
 class MultiTextureShaderClass;
 class BumpMapShaderClass;
+class SpecMapShaderClass;
+class RenderTextureClass;
 
 class GraphicsClass
 {
@@ -31,8 +33,12 @@ public:
 
 	bool Initialize(int, int, HWND);
 	void Shutdown();
-	bool Frame(float);
+	bool Frame();
 	bool Render();
+
+private:
+	bool RenderToTexture();
+	bool RenderScene();
 
 private:
 	D3DClass* m_Direct3D = nullptr;
@@ -47,4 +53,6 @@ private:
 	FrustumClass* m_Frustum = nullptr;
 	MultiTextureShaderClass* m_MultiTextureShader = nullptr;
 	BumpMapShaderClass* m_BumpMapShader = nullptr;
+	SpecMapShaderClass* m_SpecMapShader = nullptr;
+	RenderTextureClass* m_RenderTexture = nullptr;
 };

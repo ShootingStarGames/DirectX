@@ -10,7 +10,6 @@ MultiTextureShaderClass::MultiTextureShaderClass(const MultiTextureShaderClass &
 {
 }
 
-
 MultiTextureShaderClass::~MultiTextureShaderClass()
 {
 }

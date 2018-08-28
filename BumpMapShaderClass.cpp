@@ -217,7 +217,7 @@ HRESULT BumpMapShaderClass::InitializeLayout(ID3D11Device *device, ID3D10Blob *v
 }
 
 bool BumpMapShaderClass::SetShaderParameters(ID3D11DeviceContext *deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix
-	, int textureNum, ID3D11ShaderResourceView **textureArray,XMFLOAT3 lightDirecetion, XMFLOAT4 diffuseColor)
+	, int textureNum, ID3D11ShaderResourceView **textureArray,XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor)
 {
 	worldMatrix = XMMatrixTranspose(worldMatrix);
 	viewMatrix = XMMatrixTranspose(viewMatrix);
@@ -257,7 +257,7 @@ bool BumpMapShaderClass::SetShaderParameters(ID3D11DeviceContext *deviceContext,
 		LightBufferType* dataPtr2 = (LightBufferType*)mappedResource.pData;
 
 		dataPtr2->diffuseColor = diffuseColor;
-		dataPtr2->lightDirection = lightDirecetion;
+		dataPtr2->lightDirection = lightDirection;
 
 		deviceContext->Unmap(m_lightBuffer, 0);
 

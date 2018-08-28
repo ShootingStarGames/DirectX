@@ -203,9 +203,8 @@ bool SystemClass::Frame()
 	m_Position->TurnRight(m_Input->IsRightArrowPressed());
 
 	m_Input->GetMouseLocation(mouseX, mouseY);
-	float rotationY;
-	m_Position->GetRotation(rotationY);
-	if (!m_Graphics->Frame(rotationY))
+
+	if (!m_Graphics->Frame())
 	{
 		return false;
 	}

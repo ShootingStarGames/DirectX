@@ -11,6 +11,8 @@
 #include "FrustumClass.h"
 #include "MultiTextureShaderClass.h"
 #include "BumpMapShaderClass.h"
+#include "SpecMapShaderClass.h"
+#include "RenderTextureClass.h"
 #include "graphicsclass.h"
 
 
@@ -68,23 +70,23 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 			return false;
 		}
 
-		WCHAR* textureArray[2]{ L"./data/stone01.dds",L"./data/bump01.dds"};
+		WCHAR* textureArray[3] { L"./data/stone02.dds",L"./data/bump02.dds" ,L"./data/spec02.dds" };
 		// m_Model 객체 초기화
-		if (!m_Model->Initialize(m_Direct3D->GetDevice(), "./data/cube.txt", 2, textureArray))
+		if (!m_Model->Initialize(m_Direct3D->GetDevice(), "./data/cube.txt", 3, textureArray))
 		{
 			MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 			return false;
 		}
 	}
 
-	m_BumpMapShader = new BumpMapShaderClass;
+	m_SpecMapShader = new SpecMapShaderClass;
 
-	if (!m_BumpMapShader)
+	if (!m_SpecMapShader)
 	{
 		return false;
 	}
 
-	if (!m_BumpMapShader->Initialize(m_Direct3D->GetDevice(), hwnd))
+	if (!m_SpecMapShader->Initialize(m_Direct3D->GetDevice(), hwnd))
 	{
 		return false;
 	}
@@ -101,7 +103,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
 	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetSpecularPower(32.0f);
+	m_Light->SetSpecularPower(16.0f);
 
 	return true;
 }
@@ -109,6 +111,18 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void GraphicsClass::Shutdown()
 {
+	if (m_RenderTexture)
+	{
+		m_RenderTexture->Shutdown();
+		delete m_RenderTexture;
+		m_RenderTexture = 0;
+	}
+	if (m_SpecMapShader)
+	{
+		m_SpecMapShader->Shutdown();
+		delete m_SpecMapShader;
+		m_SpecMapShader = 0;
+	}
 	if (m_BumpMapShader)
 	{
 		m_BumpMapShader->Shutdown();
@@ -126,7 +140,6 @@ void GraphicsClass::Shutdown()
 		delete m_Frustum;
 		m_Frustum = 0;
 	}
-
 	if (m_ModelList)
 	{
 		m_ModelList->Shutdown();
@@ -186,15 +199,12 @@ void GraphicsClass::Shutdown()
 }
 
 
-bool GraphicsClass::Frame(float rotation)
+bool GraphicsClass::Frame()
 {
 	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 
-	m_Camera->SetRotation(0.0f, rotation, 0.0f);
-
 	return Render();
 }
-
 
 bool GraphicsClass::Render()
 {
@@ -212,7 +222,6 @@ bool GraphicsClass::Render()
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 	m_Direct3D->GetOrthoMatrix(orthoMatrix);
 
-	m_Model->Render(m_Direct3D->GetDeviceContext());
 	static float rotation = 0.0f;
 	rotation += (float)XM_PI * 0.0025f;
 	if (rotation > 360.0f)
@@ -221,12 +230,58 @@ bool GraphicsClass::Render()
 	}
 	worldMatrix = XMMatrixRotationY(rotation);
 
-	m_BumpMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(),
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	m_SpecMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(),
 		worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTextureNum(), m_Model->GetTextureArray()
-		, m_Light->GetDirection(), m_Light->GetDiffuseColor());
+		, m_Light->GetDirection(), m_Light->GetDiffuseColor(),m_Camera->GetPosition()
+		,m_Light->GetSpecularColor(),m_Light->GetSpecularPower());
 	
 	// 버퍼의 내용을 화면에 출력합니다
 	m_Direct3D->EndScene();
 
 	return true;
+}
+
+bool GraphicsClass::RenderToTexture()
+{
+	m_RenderTexture->SetRenderTarget(m_Direct3D->GetDeviceContext(), m_Direct3D->GetDepthStencilView());
+
+	m_RenderTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), m_Direct3D->GetDepthStencilView(), 0.0f, 0.0f, 1.0f, 1.0f);
+
+	if (!RenderScene())
+	{
+		return false;
+	}
+
+	m_Direct3D->SetBackBufferRenderTarget();
+	return true;
+}
+
+bool GraphicsClass::RenderScene()
+{
+	m_Camera->Render();
+
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
+
+	m_Camera->GetViewMatrix(viewMatrix);
+	m_Direct3D->GetWorldMatrix(worldMatrix);
+	m_Direct3D->GetProjectionMatrix(projectionMatrix);
+	m_Direct3D->GetOrthoMatrix(orthoMatrix);
+
+	static float rotation = 0.0f;
+	rotation += (float)XM_PI * 0.0025f;
+	if (rotation > 360.0f)
+	{
+		rotation -= 360.0f;
+	}
+
+	worldMatrix = XMMatrixRotationY(rotation);
+
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	return m_SpecMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(),
+		worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTextureNum(), m_Model->GetTextureArray()
+		, m_Light->GetDirection(), m_Light->GetDiffuseColor(), m_Camera->GetPosition()
+		, m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 }
