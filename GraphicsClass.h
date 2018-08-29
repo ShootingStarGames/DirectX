@@ -23,6 +23,7 @@ class MultiTextureShaderClass;
 class BumpMapShaderClass;
 class SpecMapShaderClass;
 class RenderTextureClass;
+class DebugWindowClass;
 
 class GraphicsClass
 {
@@ -55,4 +56,5 @@ private:
 	BumpMapShaderClass* m_BumpMapShader = nullptr;
 	SpecMapShaderClass* m_SpecMapShader = nullptr;
 	RenderTextureClass* m_RenderTexture = nullptr;
+	DebugWindowClass* m_DebugWindow = nullptr;
 };

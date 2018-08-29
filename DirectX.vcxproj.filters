@@ -89,6 +89,7 @@
       <Filter>Graphics\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="RenderTextureClass.cpp" />
+    <ClCompile Include="DebugWindowClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FontShaderClass.h">
@@ -182,6 +183,7 @@
       <Filter>Graphics\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="RenderTextureClass.h" />
+    <ClInclude Include="DebugWindowClass.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="hlsl">

@@ -353,7 +353,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	blendStateDesc.RenderTarget[0].RenderTargetWriteMask = 0x0f;
 
-	if (FAILED(m_device->CreateBlendState(&blendStateDesc, &m_alphaEnalbeBlendingState)))
+	if (FAILED(m_device->CreateBlendState(&blendStateDesc, &m_alphaEnableBlendingState)))
 	{
 		return false;
 	}
@@ -511,7 +511,7 @@ void D3DClass::TurnOnAlphaBlending()
 {
 	float blendFactor[4] = { 0.0f,0.0f,0.0f,0.0f };
 
-	m_deviceContext->OMSetBlendState(m_alphaEnalbeBlendingState, blendFactor, 0xffffffff);
+	m_deviceContext->OMSetBlendState(m_alphaEnableBlendingState, blendFactor, 0xffffffff);
 }
 
 void D3DClass::TurnOffAlphaBlending()

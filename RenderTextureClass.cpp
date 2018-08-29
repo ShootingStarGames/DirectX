@@ -88,10 +88,13 @@ void RenderTextureClass::SetRenderTarget(ID3D11DeviceContext *deviceContext, ID3
 void RenderTextureClass::ClearRenderTarget(ID3D11DeviceContext *deviceContext, ID3D11DepthStencilView *depthStencilView, 
 	float red, float green, float blue, float alpha)
 {
-	float color[4] = { red,green,blue,alpha };
+	// 버퍼를 지울 색을 설정합니다.
+	float color[4] = { red, green, blue, alpha };
 
+	// 백 버퍼를 지운다.
 	deviceContext->ClearRenderTargetView(m_renderTargetView, color);
 
+	// 깊이 버퍼를 지운다.
 	deviceContext->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 

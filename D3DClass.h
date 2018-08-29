@@ -48,6 +48,6 @@ private:
 	XMMATRIX m_orthoMatrix;
 
 	ID3D11DepthStencilState* m_depthDisabledStencilState = nullptr;
-	ID3D11BlendState* m_alphaEnalbeBlendingState = nullptr;
+	ID3D11BlendState* m_alphaEnableBlendingState = nullptr;
 	ID3D11BlendState* m_alphaDisableBlendingState = nullptr;
 };
