@@ -14,6 +14,7 @@
 #include "SpecMapShaderClass.h"
 #include "RenderTextureClass.h"
 #include "DebugWindowClass.h"
+#include "FogShaderClass.h"
 #include "graphicsclass.h"
 
 
@@ -71,9 +72,9 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 			return false;
 		}
 
-		WCHAR* textureArray[3] { L"./data/stone02.dds",L"./data/bump02.dds" ,L"./data/spec02.dds" };
+		WCHAR* textureArray[1] { L"./data/seafloor.dds" };
 		// m_Model 객체 초기화
-		if (!m_Model->Initialize(m_Direct3D->GetDevice(), "./data/cube.txt", 3, textureArray))
+		if (!m_Model->Initialize(m_Direct3D->GetDevice(), "./data/cube.txt", 1, textureArray))
 		{
 			MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 			return false;
@@ -85,10 +86,8 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		{
 			return false;
 		}
-
 		if (!m_RenderTexture->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight))
 		{
-			MessageBox(hwnd, L"Could not initialize the RenderTextureClass object.", L"Error", MB_OK);
 			return false;
 		}
 	}
@@ -98,24 +97,8 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		{
 			return false;
 		}
-
 		if (!m_DebugWindow->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight, 100, 100))
 		{
-			MessageBox(hwnd, L"Could not initialize the debugWindow object.", L"Error", MB_OK);
-			return false;
-		}
-	}
-	{
-		m_SpecMapShader = new SpecMapShaderClass;
-
-		if (!m_SpecMapShader)
-		{
-			return false;
-		}
-
-		if (!m_SpecMapShader->Initialize(m_Direct3D->GetDevice(), hwnd))
-		{
-			MessageBox(hwnd, L"Could not initialize the SpecMapShaderClass object.", L"Error", MB_OK);
 			return false;
 		}
 	}
@@ -127,31 +110,31 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		}
 		if (!m_TextureShader->Initialize(m_Direct3D->GetDevice(), hwnd))
 		{
-			MessageBox(hwnd, L"Could not initialize the TextureShaderClass object.", L"Error", MB_OK);
 			return false;
 		}
 	}
 	{
-		// m_Light 객체 생성
-		m_Light = new LightClass;
-		if (!m_Light)
+		m_FogShader = new FogShaderClass;
+		if (!m_FogShader)
 		{
 			return false;
 		}
-
-		// m_Light 객체 초기화
-		m_Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
-		m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-		m_Light->SetDirection(0.0f, 0.0f, 1.0f);
-		m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
-		m_Light->SetSpecularPower(16.0f);
+		if (!m_FogShader->Initialize(m_Direct3D->GetDevice(), hwnd))
+		{
+			return false;
+		}
 	}
 	return true;
 }
 
-
 void GraphicsClass::Shutdown()
 {
+	if (m_FogShader)
+	{
+		m_FogShader->Shutdown();
+		delete m_FogShader;
+		m_FogShader = 0;
+	}
 	if (m_DebugWindow)
 	{
 		m_DebugWindow->Shutdown();
@@ -245,7 +228,6 @@ void GraphicsClass::Shutdown()
 	}
 }
 
-
 bool GraphicsClass::Frame()
 {
 	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
@@ -259,15 +241,16 @@ bool GraphicsClass::Render()
 	{
 		return false;
 	}
+	float fogColor = .5f;
 	// 씬을 그리기 위해 버퍼를 지웁니다
-	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+	m_Direct3D->BeginScene(fogColor, fogColor, fogColor, 1.0f);
 
 	if (!RenderScene())
 	{
 		return false;
 	}
-	m_Direct3D->TurnZBufferOff();
 
+	m_Direct3D->TurnZBufferOff();
 	XMMATRIX worldMatrix, viewMatrix, orthoMatrix;
 
 	m_Camera->GetViewMatrix(viewMatrix);
@@ -279,12 +262,12 @@ bool GraphicsClass::Render()
 		return false;
 	}
 
-	if (!m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_DebugWindow->GetIndexCount(), 
-		worldMatrix, viewMatrix, orthoMatrix, m_RenderTexture->GetShaderResourceView()))
+	if (!m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_DebugWindow->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix,
+		m_RenderTexture->GetShaderResourceView()))
 	{
 		return false;
 	}
-
+	
 	m_Direct3D->TurnZBufferOn();
 
 	// 버퍼의 내용을 화면에 출력합니다
@@ -297,7 +280,7 @@ bool GraphicsClass::RenderToTexture()
 {
 	m_RenderTexture->SetRenderTarget(m_Direct3D->GetDeviceContext(), m_Direct3D->GetDepthStencilView());
 
-	m_RenderTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), m_Direct3D->GetDepthStencilView(), 0.0f, 0.0f, 1.0f, 1.0f);
+	m_RenderTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), m_Direct3D->GetDepthStencilView(), 1.0f, 1.0f, 1.0f, 1.0f);
 
 	if (!RenderScene())
 	{
@@ -312,12 +295,11 @@ bool GraphicsClass::RenderScene()
 {
 	m_Camera->Render();
 
-	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
 
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetWorldMatrix(worldMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
-	m_Direct3D->GetOrthoMatrix(orthoMatrix);
 
 	static float rotation = 0.0f;
 	rotation += (float)XM_PI * 0.0025f;
@@ -330,8 +312,11 @@ bool GraphicsClass::RenderScene()
 
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
-	return m_SpecMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(),
+
+	float fogStart = 0.0f;
+	float fogEnd = 5.0f;
+
+	return m_FogShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(),
 		worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTextureNum(), m_Model->GetTextureArray()
-		, m_Light->GetDirection(), m_Light->GetDiffuseColor(), m_Camera->GetPosition()
-		, m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+		, fogStart, fogEnd);
 }

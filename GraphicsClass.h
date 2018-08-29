@@ -24,6 +24,7 @@ class BumpMapShaderClass;
 class SpecMapShaderClass;
 class RenderTextureClass;
 class DebugWindowClass;
+class FogShaderClass;
 
 class GraphicsClass
 {
@@ -57,4 +58,5 @@ private:
 	SpecMapShaderClass* m_SpecMapShader = nullptr;
 	RenderTextureClass* m_RenderTexture = nullptr;
 	DebugWindowClass* m_DebugWindow = nullptr;
+	FogShaderClass* m_FogShader = nullptr;
 };

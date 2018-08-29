@@ -88,8 +88,14 @@
     <ClCompile Include="SpecMapShaderClass.cpp">
       <Filter>Graphics\Shaders</Filter>
     </ClCompile>
-    <ClCompile Include="RenderTextureClass.cpp" />
-    <ClCompile Include="DebugWindowClass.cpp" />
+    <ClCompile Include="DebugWindowClass.cpp">
+      <Filter>Graphics\Others</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTextureClass.cpp">
+      <Filter>Graphics\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="FogShaderClass.cpp" />
+    <ClCompile Include="BaseBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FontShaderClass.h">
@@ -182,8 +188,14 @@
     <ClInclude Include="SpecMapShaderClass.h">
       <Filter>Graphics\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="RenderTextureClass.h" />
-    <ClInclude Include="DebugWindowClass.h" />
+    <ClInclude Include="DebugWindowClass.h">
+      <Filter>Graphics\Others</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTextureClass.h">
+      <Filter>Graphics\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="FogShaderClass.h" />
+    <ClInclude Include="BaseBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="hlsl">
@@ -299,6 +311,12 @@
       <Filter>hlsl</Filter>
     </FxCompile>
     <FxCompile Include="hlsl\SpecmapVertexShader.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="hlsl\FogPixelShader.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="hlsl\FogVertexShader.hlsl">
       <Filter>hlsl</Filter>
     </FxCompile>
   </ItemGroup>
