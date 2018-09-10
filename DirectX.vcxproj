@@ -144,7 +144,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BaseBuffer.h" />
     <ClInclude Include="BitmapClass.h" />
     <ClInclude Include="BumpMapShaderClass.h" />
     <ClInclude Include="CameraClass.h" />
@@ -166,6 +165,7 @@
     <ClInclude Include="ModelListClass.h" />
     <ClInclude Include="MultiTextureShaderClass.h" />
     <ClInclude Include="PositionClass.h" />
+    <ClInclude Include="ReflectionShaderClass.h" />
     <ClInclude Include="RenderTextureClass.h" />
     <ClInclude Include="ShaderClass.h" />
     <ClInclude Include="SoundClass.h" />
@@ -180,7 +180,6 @@
     <ClInclude Include="TimerClass.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BaseBuffer.cpp" />
     <ClCompile Include="BitmapClass.cpp" />
     <ClCompile Include="BumpMapShaderClass.cpp" />
     <ClCompile Include="CameraClass.cpp" />
@@ -202,6 +201,7 @@
     <ClCompile Include="ModelListClass.cpp" />
     <ClCompile Include="MultiTextureShaderClass.cpp" />
     <ClCompile Include="PositionClass.cpp" />
+    <ClCompile Include="ReflectionShaderClass.cpp" />
     <ClCompile Include="RenderTextureClass.cpp" />
     <ClCompile Include="ShaderClass.cpp" />
     <ClCompile Include="SoundClass.cpp" />
@@ -220,14 +220,21 @@
     <ClCompile Include="TimerClass.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="data\alpha01.dds" />
+    <Image Include="data\blue01.dds" />
+    <Image Include="data\bump01.dds" />
+    <Image Include="data\bump02.dds" />
     <Image Include="data\dirt01.dds" />
     <Image Include="data\font.dds" />
     <Image Include="data\light01.dds" />
     <Image Include="data\seafloor.dds" />
+    <Image Include="data\spec02.dds" />
     <Image Include="data\stone01.dds" />
+    <Image Include="data\stone02.dds" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\cube.txt" />
+    <Text Include="data\floor.txt" />
     <Text Include="data\fontdata.txt" />
     <Text Include="data\square.txt" />
   </ItemGroup>
@@ -276,6 +283,14 @@
     <FxCompile Include="hlsl\LightMapVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="hlsl\ReflectionPixelShader.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="hlsl\ReflectionVertexShader.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="hlsl\SpecmapPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>

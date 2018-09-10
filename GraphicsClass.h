@@ -25,6 +25,7 @@ class SpecMapShaderClass;
 class RenderTextureClass;
 class DebugWindowClass;
 class FogShaderClass;
+class ReflectionShaderClass;
 
 class GraphicsClass
 {
@@ -45,7 +46,7 @@ private:
 private:
 	D3DClass* m_Direct3D = nullptr;
 	CameraClass* m_Camera = nullptr;
-	ModelClass* m_Model = nullptr;
+	ModelClass* m_Model = nullptr, *m_FloorModel = nullptr;
 	LightShaderClass* m_LightShader = nullptr;
 	LightClass* m_Light = nullptr;
 	TextureShaderClass* m_TextureShader = nullptr;
@@ -59,4 +60,5 @@ private:
 	RenderTextureClass* m_RenderTexture = nullptr;
 	DebugWindowClass* m_DebugWindow = nullptr;
 	FogShaderClass* m_FogShader = nullptr;
+	ReflectionShaderClass* m_ReflectionShader = nullptr;	
 };

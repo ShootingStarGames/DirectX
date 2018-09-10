@@ -15,6 +15,7 @@
 #include "RenderTextureClass.h"
 #include "DebugWindowClass.h"
 #include "FogShaderClass.h"
+#include "ReflectionShaderClass.h"
 #include "graphicsclass.h"
 
 
@@ -22,16 +23,13 @@ GraphicsClass::GraphicsClass()
 {
 }
 
-
 GraphicsClass::GraphicsClass(const GraphicsClass& other)
 {
 }
 
-
 GraphicsClass::~GraphicsClass()
 {
 }
-
 
 bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
@@ -57,12 +55,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		{
 			return false;
 		}
-
-		// 카메라 포지션 설정
-		XMMATRIX baseViewMatrix;
-		m_Camera->SetPosition(0.0f, 0.0f, -1.0f);
-		m_Camera->Render();
-		m_Camera->GetViewMatrix(baseViewMatrix);
 	}
 	{
 		// m_Model 객체 생성
@@ -81,28 +73,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		}
 	}
 	{
-		m_RenderTexture = new RenderTextureClass;
-		if (!m_RenderTexture)
-		{
-			return false;
-		}
-		if (!m_RenderTexture->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight))
-		{
-			return false;
-		}
-	}
-	{
-		m_DebugWindow = new DebugWindowClass;
-		if (!m_DebugWindow)
-		{
-			return false;
-		}
-		if (!m_DebugWindow->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight, 100, 100))
-		{
-			return false;
-		}
-	}
-	{
 		m_TextureShader = new TextureShaderClass;
 		if (!m_TextureShader)
 		{
@@ -114,12 +84,38 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		}
 	}
 	{
-		m_FogShader = new FogShaderClass;
-		if (!m_FogShader)
+		m_RenderTexture = new RenderTextureClass;
+		if (!m_RenderTexture)
 		{
 			return false;
 		}
-		if (!m_FogShader->Initialize(m_Direct3D->GetDevice(), hwnd))
+		if (!m_RenderTexture->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight))
+		{
+			return false;
+		}
+	}
+	{
+		m_FloorModel = new ModelClass;
+		if (!m_FloorModel)
+		{
+			return false;
+		}
+
+		WCHAR* textureArray[1]{ L"./data/blue01.dds" };
+		// m_Model 객체 초기화
+		if (!m_FloorModel->Initialize(m_Direct3D->GetDevice(), "./data/floor.txt", 1, textureArray))
+		{
+			MessageBox(hwnd, L"Could not initialize the m_FloorModel object.", L"Error", MB_OK);
+			return false;
+		}
+	}
+	{
+		m_ReflectionShader = new ReflectionShaderClass;
+		if (!m_ReflectionShader)
+		{
+			return false;
+		}
+		if (!m_ReflectionShader->Initialize(m_Direct3D->GetDevice(), hwnd))
 		{
 			return false;
 		}
@@ -129,6 +125,12 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void GraphicsClass::Shutdown()
 {
+	if (m_ReflectionShader)
+	{
+		m_ReflectionShader->Shutdown();
+		delete m_ReflectionShader;
+		m_ReflectionShader = 0;
+	}
 	if (m_FogShader)
 	{
 		m_FogShader->Shutdown();
@@ -212,6 +214,12 @@ void GraphicsClass::Shutdown()
 		m_Model = 0;
 	}
 
+	if (m_FloorModel)
+	{
+		m_FloorModel->Shutdown();
+		delete m_FloorModel;
+		m_FloorModel = 0;
+	}
 	// m_Camera 객체 반환
 	if (m_Camera)
 	{
@@ -230,7 +238,7 @@ void GraphicsClass::Shutdown()
 
 bool GraphicsClass::Frame()
 {
-	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 
 	return Render();
 }
@@ -241,68 +249,33 @@ bool GraphicsClass::Render()
 	{
 		return false;
 	}
-	float fogColor = .5f;
-	// 씬을 그리기 위해 버퍼를 지웁니다
-	m_Direct3D->BeginScene(fogColor, fogColor, fogColor, 1.0f);
+
 
 	if (!RenderScene())
 	{
 		return false;
 	}
-
-	m_Direct3D->TurnZBufferOff();
-	XMMATRIX worldMatrix, viewMatrix, orthoMatrix;
-
-	m_Camera->GetViewMatrix(viewMatrix);
-	m_Direct3D->GetWorldMatrix(worldMatrix);
-	m_Direct3D->GetOrthoMatrix(orthoMatrix);
-
-	if (!m_DebugWindow->Render(m_Direct3D->GetDeviceContext(), 50, 50))
-	{
-		return false;
-	}
-
-	if (!m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_DebugWindow->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix,
-		m_RenderTexture->GetShaderResourceView()))
-	{
-		return false;
-	}
-	
-	m_Direct3D->TurnZBufferOn();
-
-	// 버퍼의 내용을 화면에 출력합니다
-	m_Direct3D->EndScene();
 
 	return true;
 }
 
 bool GraphicsClass::RenderToTexture()
 {
+	XMMATRIX worldMatrix, reflectionViewMatrix, projectionMatrix;
+
 	m_RenderTexture->SetRenderTarget(m_Direct3D->GetDeviceContext(), m_Direct3D->GetDepthStencilView());
 
-	m_RenderTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), m_Direct3D->GetDepthStencilView(), 1.0f, 1.0f, 1.0f, 1.0f);
+	m_RenderTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), m_Direct3D->GetDepthStencilView(), 0.0f, 0.0f, 0.0f, 1.0f);
 
-	if (!RenderScene())
-	{
-		return false;
-	}
+	m_Camera->RenderReflection(-1.5f);
 
-	m_Direct3D->SetBackBufferRenderTarget();
-	return true;
-}
+	reflectionViewMatrix = m_Camera->GetReflectionViewMatrix();
 
-bool GraphicsClass::RenderScene()
-{
-	m_Camera->Render();
-
-	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
-
-	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetWorldMatrix(worldMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 
 	static float rotation = 0.0f;
-	rotation += (float)XM_PI * 0.0025f;
+	rotation += (float)XM_PI * 0.005f;
 	if (rotation > 360.0f)
 	{
 		rotation -= 360.0f;
@@ -312,11 +285,53 @@ bool GraphicsClass::RenderScene()
 
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
+	m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, reflectionViewMatrix, projectionMatrix,
+		m_Model->GetTextureArray()[0]);
 
-	float fogStart = 0.0f;
-	float fogEnd = 5.0f;
+	m_Direct3D->SetBackBufferRenderTarget();
+	return true;
+}
 
-	return m_FogShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(),
-		worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTextureNum(), m_Model->GetTextureArray()
-		, fogStart, fogEnd);
+bool GraphicsClass::RenderScene()
+{
+	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+
+	m_Camera->Render();
+
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, reflectionMatrix;
+
+	m_Camera->GetViewMatrix(viewMatrix);
+	m_Direct3D->GetWorldMatrix(worldMatrix);
+	m_Direct3D->GetProjectionMatrix(projectionMatrix);
+
+	static float rotation = 0.0f;
+	rotation += (float)XM_PI * 0.005f;
+	if (rotation > 360.0f)
+	{
+		rotation -= 360.0f;
+	}
+
+	worldMatrix = XMMatrixRotationY(rotation);
+
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	if (!m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTextureArray()[0]))
+	{
+		return false;
+	}
+
+	m_Direct3D->GetWorldMatrix(worldMatrix);
+	worldMatrix = XMMatrixTranslation(0.0f, -1.5f, 0.0f);
+
+	reflectionMatrix = m_Camera->GetReflectionViewMatrix();
+
+	m_FloorModel->Render(m_Direct3D->GetDeviceContext());
+
+	if (!m_ReflectionShader->Render(m_Direct3D->GetDeviceContext(), m_FloorModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_FloorModel->GetTextureArray()[0],m_RenderTexture->GetShaderResourceView(), reflectionMatrix))
+	{
+		return false;
+	}
+	m_Direct3D->EndScene();
+	return true;
 }

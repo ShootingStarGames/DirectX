@@ -21,6 +21,7 @@ private:
 	bool InitializeShader(ID3D11Device*, HWND, WCHAR*, WCHAR*);
 	void ShutdownShader();
 
+	HRESULT InitializeBuffer(ID3D11Device*,void*);
 	HRESULT InitializeLayout(ID3D11Device*, ID3D10Blob*) override;
 	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX, XMMATRIX, XMMATRIX, int, ID3D11ShaderResourceView**, float, float);
 

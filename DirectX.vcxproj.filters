@@ -94,8 +94,10 @@
     <ClCompile Include="RenderTextureClass.cpp">
       <Filter>Graphics\Shaders</Filter>
     </ClCompile>
-    <ClCompile Include="FogShaderClass.cpp" />
-    <ClCompile Include="BaseBuffer.cpp" />
+    <ClCompile Include="FogShaderClass.cpp">
+      <Filter>Graphics\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectionShaderClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FontShaderClass.h">
@@ -194,8 +196,10 @@
     <ClInclude Include="RenderTextureClass.h">
       <Filter>Graphics\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="FogShaderClass.h" />
-    <ClInclude Include="BaseBuffer.h" />
+    <ClInclude Include="FogShaderClass.h">
+      <Filter>Graphics\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="ReflectionShaderClass.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="hlsl">
@@ -245,6 +249,24 @@
     <Image Include="data\stone01.dds">
       <Filter>Resource</Filter>
     </Image>
+    <Image Include="data\alpha01.dds">
+      <Filter>Resource</Filter>
+    </Image>
+    <Image Include="data\blue01.dds">
+      <Filter>Resource</Filter>
+    </Image>
+    <Image Include="data\bump01.dds">
+      <Filter>Resource</Filter>
+    </Image>
+    <Image Include="data\bump02.dds">
+      <Filter>Resource</Filter>
+    </Image>
+    <Image Include="data\spec02.dds">
+      <Filter>Resource</Filter>
+    </Image>
+    <Image Include="data\stone02.dds">
+      <Filter>Resource</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\cube.txt">
@@ -254,6 +276,9 @@
       <Filter>Resource</Filter>
     </Text>
     <Text Include="data\square.txt">
+      <Filter>Resource</Filter>
+    </Text>
+    <Text Include="data\floor.txt">
       <Filter>Resource</Filter>
     </Text>
   </ItemGroup>
@@ -317,6 +342,12 @@
       <Filter>hlsl</Filter>
     </FxCompile>
     <FxCompile Include="hlsl\FogVertexShader.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="hlsl\ReflectionPixelShader.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="hlsl\ReflectionVertexShader.hlsl">
       <Filter>hlsl</Filter>
     </FxCompile>
   </ItemGroup>
